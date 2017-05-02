@@ -1,5 +1,6 @@
 package finnhartshorn.monashlibrary;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,15 +12,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.TextView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity implements OnCompleteListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -29,6 +36,16 @@ public class MainMenuActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
+
+    private static final String TAG = "MainActivity";
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mThumbnailRef = mRootRef.child("thumbnails");
+
+
+    private DatabaseReference mDatabase;
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
@@ -54,15 +71,27 @@ public class MainMenuActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        mAuth = FirebaseAuth.getInstance();
 
+        mAuth.signInAnonymously().addOnCompleteListener(this);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check is user is signed in
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser == null) {
+            mAuth.signInAnonymously();
+        }
+
+    }
+
+    private void signInAnonymously() {
+        mAuth.signInAnonymously().addOnCompleteListener(this);
     }
 
 
@@ -86,6 +115,24 @@ public class MainMenuActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onComplete(@NonNull Task task) {
+        if (task.isSuccessful()) {
+            Log.d(TAG, "signInAnonymously:success");            // Log successful sign in
+            FirebaseUser user = mAuth.getCurrentUser();
+            updateUI(user);
+        } else {
+            Log.w(TAG, "signInAnonymously:failure", task.getException());
+            updateUI(null);
+        }
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            Log.d(TAG, "signInAnonymously:success =:= " + user.getEmail());
+        }
     }
 
     /**
@@ -116,10 +163,18 @@ public class MainMenuActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main_menu, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
+            if(getArguments().getInt(ARG_SECTION_NUMBER)== 1) {
+                View rootView = inflater.inflate(R.layout.fragment_books, container, false);
+                return rootView;
+            } else if(getArguments().getInt(ARG_SECTION_NUMBER)== 2) {
+                View rootView = inflater.inflate(R.layout.fragment_locations, container, false);
+                return rootView;
+            } else if(getArguments().getInt(ARG_SECTION_NUMBER)== 3) {
+                View rootView = inflater.inflate(R.layout.fragment_info, container, false);
+                return rootView;
+            } else {
+                throw new RuntimeException("Invalid tab");
+            }
         }
     }
 
@@ -150,11 +205,11 @@ public class MainMenuActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "Books";
                 case 1:
-                    return "SECTION 2";
+                    return "Locations";
                 case 2:
-                    return "SECTION 3";
+                    return "Info";
             }
             return null;
         }

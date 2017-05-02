@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1046691338748",
+    "firebase_url": "https://fit3143-monash-library.firebaseio.com",
+    "project_id": "fit3143-monash-library",
+    "storage_bucket": "fit3143-monash-library.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046691338748:android:fdad93874fbd83d6",
+        "android_client_info": {
+          "package_name": "finnhartshorn.monashlibrary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046691338748-msdtvaco0tsj4trqtcg04ilda4m44knv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "finnhartshorn.monashlibrary",
+            "certificate_hash": "8fd8c492083e2453e5ac47e429b44fe333232f83"
+          }
+        },
+        {
+          "client_id": "1046691338748-3k3t40a8bhal7pnukvt4oin5ov9uk4s3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkyRaoxH0tQE-Yc2ycvxeBcLaxiq37umY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1046691338748-3k3t40a8bhal7pnukvt4oin5ov9uk4s3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
