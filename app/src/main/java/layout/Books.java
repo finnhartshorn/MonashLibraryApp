@@ -4,13 +4,23 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+
+import java.util.List;
+
+import finnhartshorn.monashlibrary.Book;
+import finnhartshorn.monashlibrary.BookAdapter;
 import finnhartshorn.monashlibrary.R;
 
 /**
@@ -22,14 +32,20 @@ import finnhartshorn.monashlibrary.R;
  * create an instance of this fragment.
  */
 public class Books extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "ThumbnailLocation";
-//    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference mThumbnailRef = mRootRef.child("thumbnails");
+    private static final String TAG = "Books";
+    // Recycler view references
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
+
+    List<Book> mDataset;
+
+
+    // Database references
+    private DatabaseReference mRootRef;
+//    private DatabaseReference mThumbnailRef;
+    private DatabaseReference mBooksRef;
 
     private OnFragmentInteractionListener mListener;
 
@@ -47,9 +63,9 @@ public class Books extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static Books newInstance(String param1, String param2) {
         Books fragment = new Books();
-        Bundle args = new Bundle();
+//        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
+//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -60,6 +76,9 @@ public class Books extends Fragment {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        initDataset();
+        mAdapter = new BookAdapter(mDataset);
+        Log.d(TAG, "Test");
     }
 
     @Override
@@ -74,7 +93,22 @@ public class Books extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_books, container, false);
+        View view = inflater.inflate(R.layout.fragment_books, container, false);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        // get reference to recycler view
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.books_recycler_view);
+        mRecyclerView.setHasFixedSize(true); // Layout size shouldn't change when the content of the view changes, so this should improve performance
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+//        mAdapter.notifyDataSetChanged();
+        Log.d(TAG, "Attached Adapter");
+//        mRootRef = FirebaseDatabase.getInstance().getReference();
+//        mBooksRef = mRootRef.child("books");
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -95,11 +129,25 @@ public class Books extends Fragment {
         }
     }
 
+    private void initDataset() {
+        Log.d(TAG, "Dataset initiated");
+        mDataset.add(new Book("1","1","1"));
+        mDataset.add(new Book("2","2","2"));
+        mDataset.add(new Book("3","3","3"));
+        mDataset.add(new Book("4","4","4"));
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
+
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+////        mAdapter.cleanup();
+//    }
 
     /**
      * This interface must be implemented by activities that contain this
