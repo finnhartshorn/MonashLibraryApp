@@ -24,9 +24,9 @@ import finnhartshorn.monashlibrary.Book;
 import finnhartshorn.monashlibrary.BookAdapter;
 import finnhartshorn.monashlibrary.R;
 
-public class Books extends Fragment {
+public class BooksTabFragment extends Fragment {
 
-    private static final String TAG = "Books";
+    private static final String TAG = "BooksTabFragment";
     // Recycler view references
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -42,13 +42,13 @@ public class Books extends Fragment {
 
 //    private OnFragmentInteractionListener mListener;
 
-    public Books() {
+    public BooksTabFragment() {
         // Required empty public constructor
     }
 
 // Unsure of what this actually does
-//    public static Books newInstance(String param1, String param2) {
-//        Books fragment = new Books();
+//    public static BooksTabFragment newInstance(String param1, String param2) {
+//        BooksTabFragment fragment = new BooksTabFragment();
 ////        Bundle args = new Bundle();
 ////        args.putString(ARG_PARAM1, param1);
 ////        fragment.setArguments(args);

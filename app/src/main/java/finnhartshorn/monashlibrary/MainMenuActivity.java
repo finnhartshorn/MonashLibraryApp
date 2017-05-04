@@ -3,9 +3,6 @@ package finnhartshorn.monashlibrary;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -19,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,9 +25,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import layout.Books;
+import layout.BooksTabFragment;
 import layout.Info;
-import layout.Locations;
+import layout.Locations.LocationsTabFragment;
 
 public class MainMenuActivity extends AppCompatActivity implements OnCompleteListener {
 
@@ -210,9 +206,9 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
 
             switch (position) {
                 case 0:
-                    return new Books();
+                    return new BooksTabFragment();
                 case 1:
-                    return new Locations();
+                    return new LocationsTabFragment();
                 case 2:
                     return new Info();
             }
