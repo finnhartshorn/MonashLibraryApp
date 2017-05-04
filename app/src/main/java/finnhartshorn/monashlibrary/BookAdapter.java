@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Finn Hartshorn on 3/05/2017.
@@ -15,17 +15,19 @@ import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
-    private List<Book> mBookList;
+    private ArrayList<Book> mBookList;
 
-    public BookAdapter(List<Book> bookList) {
-        mBookList = bookList;
+    public BookAdapter(ArrayList<Book> bookList) {
+        mBookList = new ArrayList<Book>(bookList);
     }
 
     @Override
     public BookViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_book_card_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_card_view, parent, false);
 
-        return new BookViewHolder(v);
+        BookViewHolder bookViewHolder = new BookViewHolder(v);
+
+        return bookViewHolder;
     }
 
     @Override

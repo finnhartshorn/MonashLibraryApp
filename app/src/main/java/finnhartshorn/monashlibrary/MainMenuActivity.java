@@ -1,9 +1,11 @@
 package finnhartshorn.monashlibrary;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -18,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,16 +29,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class MainMenuActivity extends AppCompatActivity implements OnCompleteListener {
+import layout.Books;
+import layout.Info;
+import layout.Locations;
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+public class MainMenuActivity extends AppCompatActivity implements OnCompleteListener {
 
     private static final String TAG = "MainActivity";
 
@@ -46,7 +44,7 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
 
     private DatabaseReference mDatabase;
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+//    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -60,16 +58,30 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+
+//        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        PagerAdapter pagerAdapter =
+                new PagerAdapter(getSupportFragmentManager(), MainMenuActivity.this);
+        viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(viewPager);
+
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setCustomView(pagerAdapter.getTabView(i));
+        }
+
+
+//        mViewPager = (ViewPager) findViewById(R.id.container);
+//        mViewPager.setAdapter(mSectionsPagerAdapter);
+//
+//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+//        tabLayout.setupWithViewPager(mViewPager);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -135,6 +147,11 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -160,58 +177,62 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
             return fragment;
         }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            if(getArguments().getInt(ARG_SECTION_NUMBER)== 1) {
-                View rootView = inflater.inflate(R.layout.fragment_books, container, false);
-                return rootView;
-            } else if(getArguments().getInt(ARG_SECTION_NUMBER)== 2) {
-                View rootView = inflater.inflate(R.layout.fragment_locations, container, false);
-                return rootView;
-            } else if(getArguments().getInt(ARG_SECTION_NUMBER)== 3) {
-                View rootView = inflater.inflate(R.layout.fragment_info, container, false);
-                return rootView;
-            } else {
-                throw new RuntimeException("Invalid tab");
-            }
-        }
+//        @Override
+//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                                 Bundle savedInstanceState) {
+//            if(getArguments().getInt(ARG_SECTION_NUMBER)== 1) {
+//                View rootView = inflater.inflate(R.layout.fragment_books, container, false);
+//                return rootView;
+//            } else if(getArguments().getInt(ARG_SECTION_NUMBER)== 2) {
+//                View rootView = inflater.inflate(R.layout.fragment_locations, container, false);
+//                return rootView;
+//            } else if(getArguments().getInt(ARG_SECTION_NUMBER)== 3) {
+//                View rootView = inflater.inflate(R.layout.fragment_info, container, false);
+//                return rootView;
+//            } else {
+//                throw new RuntimeException("Invalid tab");
+//            }
+//        }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    class PagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+        String tabTitles[] = new String[] {"Books", "Locations", "Info"};
+        Context context;
+
+        public PagerAdapter(FragmentManager fragmentManager, Context context){
+            super(fragmentManager);
+            this.context = context;
         }
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+
+            switch (position) {
+                case 0:
+                    return new Books();
+                case 1:
+                    return new Locations();
+                case 2:
+                    return new Info();
+            }
+            return null;
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return tabTitles.length;
         }
-
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Books";
-                case 1:
-                    return "Locations";
-                case 2:
-                    return "Info";
-            }
-            return null;
+            return tabTitles[position];
+        }
+
+        public View getTabView(int position) {
+            View tab = LayoutInflater.from(MainMenuActivity.this).inflate(R.layout.blank_tab, null);
+            TextView textView = (TextView) tab.findViewById(R.id.testTextView);
+            textView.setText(tabTitles[position]);
+            return tab;
         }
     }
 }
