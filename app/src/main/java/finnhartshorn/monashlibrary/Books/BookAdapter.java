@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary;
+package finnhartshorn.monashlibrary.Books;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import finnhartshorn.monashlibrary.R;
 
 /**
  * Created by Finn Hartshorn on 3/05/2017.

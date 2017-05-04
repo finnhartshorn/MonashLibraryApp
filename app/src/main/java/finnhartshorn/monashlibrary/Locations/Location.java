@@ -1,4 +1,4 @@
-package layout.Locations;
+package finnhartshorn.monashlibrary.Locations;
 
 /**
  * Created by Finn Hartshorn on 4/05/2017.

@@ -25,9 +25,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import layout.BooksTabFragment;
+import finnhartshorn.monashlibrary.Books.BooksTabFragment;
 import layout.Info;
-import layout.Locations.LocationsTabFragment;
+import finnhartshorn.monashlibrary.Locations.LocationsTabFragment;
 
 public class MainMenuActivity extends AppCompatActivity implements OnCompleteListener {
 

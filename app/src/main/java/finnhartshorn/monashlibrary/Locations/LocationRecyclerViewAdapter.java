@@ -1,4 +1,4 @@
-package layout.Locations;
+package finnhartshorn.monashlibrary.Locations;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
