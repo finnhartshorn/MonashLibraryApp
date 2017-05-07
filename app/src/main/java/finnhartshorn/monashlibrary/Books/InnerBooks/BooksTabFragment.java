@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import finnhartshorn.monashlibrary.Books.OuterBookAdapter;
 import finnhartshorn.monashlibrary.R;
 
 public class BooksTabFragment extends Fragment {
@@ -25,10 +26,10 @@ public class BooksTabFragment extends Fragment {
     private static final String TAG = "BooksTabFragment";
     // Recycler view references
     private RecyclerView mRecyclerView;
-    private BookAdapter mAdapter;
+    private OuterBookAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
-    ArrayList<Book> mDataset = new ArrayList<Book>();
+    ArrayList<ArrayList<Book>> mDataset = new ArrayList<ArrayList<Book>>();
 
 
     // Database references
@@ -75,9 +76,11 @@ public class BooksTabFragment extends Fragment {
 
 //        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.books_recycler_view);
 //        recyclerView.setHasFixedSize(true);
-//        initDataset();
-//        BookAdapter bookAdapter = new BookAdapter(mDataset);
-//        recyclerView.setAdapter(bookAdapter);
+//
+//        ArrayList<String> titles = new ArrayList();
+//        titles.add("Recently Added");
+//        mAdapter = new OuterBookAdapter(titles, mDataset);
+//        recyclerView.setAdapter(mAdapter);
 //
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 //        recyclerView.setLayoutManager(linearLayoutManager);
@@ -93,14 +96,18 @@ public class BooksTabFragment extends Fragment {
         Query mBookQuery;
         mBookQuery = mRootRef.child("books").limitToFirst(10);
 
-        mBookQuery.addValueEventListener(new ValueEventListener() {
+        mBookQuery.addValueEventListener(new ValueEventListener() {             // TODO: Seperate class, this class?
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mDataset = new ArrayList<Book>();
+                if (mDataset.size() == 0){
+                    mDataset.add(new ArrayList<Book>());
+                } else {
+                    mDataset.set(0, new ArrayList<Book>());
+                }
                 for (DataSnapshot bookSnapshot: dataSnapshot.getChildren()) {
                     Book book = bookSnapshot.getValue(Book.class);
                     book.setISBN(bookSnapshot.getKey());
-                    mDataset.add(book);
+                    mDataset.get(0).add(book);
                 }
                 mAdapter.updateDataset(mDataset);
                 Log.d(TAG, "New dataset, length: " + Integer.toString(mDataset.size()));
@@ -118,67 +125,25 @@ public class BooksTabFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.books_recycler_view);
         recyclerView.setHasFixedSize(true);
-//        initDataset();
-        mAdapter = new BookAdapter(getActivity(), mDataset);
+
+        ArrayList<String> titles = new ArrayList();
+        titles.add("Recently Added");
+        mAdapter = new OuterBookAdapter(titles, mDataset);
         recyclerView.setAdapter(mAdapter);
 
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+//        recyclerView.setLayoutManager(linearLayoutManager);
+//
+//        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.books_recycler_view);
+//        recyclerView.setHasFixedSize(true);
+////        initDataset();
+//        mAdapter = new BookAdapter(getActivity(), mDataset);
+//        recyclerView.setAdapter(mAdapter);
+//
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
     }
-
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-
-    private void initDataset() {
-        Log.d(TAG, "Dataset initiated");
-        mDataset = new ArrayList<Book>();
-        mDataset.add(new Book("1","1","1","1"));
-        mDataset.add(new Book("2","2","2","2"));
-        mDataset.add(new Book("3","3","3","3"));
-        mDataset.add(new Book("4","4","4","4"));
-    }
-
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-////        mAdapter.cleanup();
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+    
 }
