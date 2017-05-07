@@ -5,28 +5,31 @@ package finnhartshorn.monashlibrary.Books;
  */
 
 public class Book {
-    private String mISBN;
+//    private String mISBN;
     private String mTitle;
     private String mThumbnail;
+    private String mAuthor;
+    private String mPubDate;
 
     public Book() {
         // This is needed for Firebase
     }
 
-    public Book(String ISBN, String title, String thumbnail) {
-        mISBN = ISBN;
+    public Book(String Author, String pubDate, String thumbnail, String title) {
+        mAuthor = Author;
         mTitle = title;
         mThumbnail = thumbnail;
+        mPubDate = pubDate;
     }
 
     // Generated getters and setters
-    public String getISBN() {
-        return mISBN;
+    public String getAuthor() {
+        return mAuthor;
     }
 
-    public void setISBN(String mISBN
+    public void setAuthor(String mAuthor
     ) {
-        this.mISBN = mISBN;
+        this.mAuthor = mAuthor;
     }
 
     public String getTitle() {
@@ -43,5 +46,13 @@ public class Book {
 
     public void setThumbnail(String mThumbnail) {
         this.mThumbnail = mThumbnail;
+    }
+
+    public String getPublicationDate() {
+        return mPubDate;
+    }
+
+    public void setPublicationDate(String mPubDate) {
+        this.mPubDate = mPubDate;
     }
 }

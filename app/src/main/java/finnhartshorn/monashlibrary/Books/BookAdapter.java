@@ -40,6 +40,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.getImageTextView().setText(mBook.getThumbnail());
 
     }
+    public void updateDataset(ArrayList<Book> newBookList) {
+        mBookList = newBookList;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
