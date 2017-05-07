@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Books;
+package finnhartshorn.monashlibrary.Books.InnerBooks;
 
 /**
  * Created by Finn Hartshorn on 3/05/2017.
@@ -10,6 +10,7 @@ public class Book {
     private String mThumbnail;
     private String mAuthor;
     private String mPubDate;
+    private String mISBN;
 
     public Book() {
         // This is needed for Firebase
@@ -48,11 +49,13 @@ public class Book {
         this.mThumbnail = mThumbnail;
     }
 
-    public String getPublicationDate() {
-        return mPubDate;
-    }
+    public String getPublicationDate() { return mPubDate; }
 
     public void setPublicationDate(String mPubDate) {
         this.mPubDate = mPubDate;
     }
+
+    public String getISBN() { return mISBN; }
+
+    public void setISBN(String mISBN) { this.mISBN = mISBN; }
 }

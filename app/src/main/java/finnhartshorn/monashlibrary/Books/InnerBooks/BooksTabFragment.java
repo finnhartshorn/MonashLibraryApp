@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Books;
+package finnhartshorn.monashlibrary.Books.InnerBooks;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +13,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -89,14 +90,16 @@ public class BooksTabFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        mBooksRef = mRootRef.child("books");
+        Query mBookQuery;
+        mBookQuery = mRootRef.child("books").limitToFirst(10);
 
-        mBooksRef.addValueEventListener(new ValueEventListener() {
+        mBookQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mDataset = new ArrayList<Book>();
                 for (DataSnapshot bookSnapshot: dataSnapshot.getChildren()) {
                     Book book = bookSnapshot.getValue(Book.class);
+                    book.setISBN(bookSnapshot.getKey());
                     mDataset.add(book);
                 }
                 mAdapter.updateDataset(mDataset);
@@ -116,10 +119,11 @@ public class BooksTabFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.books_recycler_view);
         recyclerView.setHasFixedSize(true);
 //        initDataset();
-        mAdapter = new BookAdapter(mDataset);
+        mAdapter = new BookAdapter(getActivity(), mDataset);
         recyclerView.setAdapter(mAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
     }

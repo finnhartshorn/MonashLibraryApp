@@ -1,11 +1,18 @@
-package finnhartshorn.monashlibrary.Books;
+package finnhartshorn.monashlibrary.Books.InnerBooks;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -17,9 +24,17 @@ import finnhartshorn.monashlibrary.R;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
+    private final Activity activity;
+
+    private static final String TAG = "BookAdapter";
+
     private ArrayList<Book> mBookList;
 
-    public BookAdapter(ArrayList<Book> bookList) {
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    private StorageReference thumbnailsReference = storageReference.child("cover-images");
+
+    public BookAdapter(Activity activity, ArrayList<Book> bookList) {
+        this.activity = activity;
         mBookList = new ArrayList<Book>(bookList);
     }
 
@@ -36,8 +51,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public void onBindViewHolder(BookViewHolder holder, int position) {
         Log.d("BookAdapter", "Element " + position + " set.");
         Book mBook = mBookList.get(position);
-        holder.getTitleTextView().setText(mBook.getTitle());
-        holder.getImageTextView().setText(mBook.getThumbnail());
+        StorageReference coverReference = thumbnailsReference.child(mBook.getThumbnail());          //TODO: This could fail, handle that
+
+        Glide.with(activity)        // Glide caches images, which will reduce data footprint
+                .using(new FirebaseImageLoader())
+                .load(coverReference)
+                .into(holder.getCoverImageView());
 
     }
     public void updateDataset(ArrayList<Book> newBookList) {
@@ -52,21 +71,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     public static class BookViewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView mTitleTextView;
-        protected TextView mImageTextView;
+        protected ImageView mCoverImageView;
 
         public BookViewHolder(View itemView) {
             super(itemView);
-            mTitleTextView = (TextView) itemView.findViewById(R.id.card_title_text);
-            mImageTextView = (TextView) itemView.findViewById(R.id.card_image_text);
+            mCoverImageView = (ImageView) itemView.findViewById(R.id.coverImageView);
         }
 
-        public TextView getTitleTextView() {
-            return mTitleTextView;
-        }
 
-        public TextView getImageTextView() {
-            return mImageTextView;
-        }
+        public ImageView getCoverImageView() { return mCoverImageView; }
     }
 }

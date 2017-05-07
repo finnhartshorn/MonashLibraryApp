@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import finnhartshorn.monashlibrary.Books.BooksTabFragment;
+import finnhartshorn.monashlibrary.Books.InnerBooks.BooksTabFragment;
 import layout.Info;
 import finnhartshorn.monashlibrary.Locations.LocationsTabFragment;
 
@@ -79,9 +79,9 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
 //        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 //        tabLayout.setupWithViewPager(mViewPager);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuth.signInAnonymously().addOnCompleteListener(this);
+//        mAuth = FirebaseAuth.getInstance();
+//
+//        mAuth.signInAnonymously().addOnCompleteListener(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
@@ -90,11 +90,11 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
     public void onStart() {
         super.onStart();
         // Check is user is signed in
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if (currentUser == null) {
-            mAuth.signInAnonymously();
-        }
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//
+//        if (currentUser == null) {
+//            mAuth.signInAnonymously();
+//        }
 
     }
 
