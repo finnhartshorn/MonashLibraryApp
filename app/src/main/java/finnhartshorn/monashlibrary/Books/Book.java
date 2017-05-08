@@ -1,10 +1,13 @@
-package finnhartshorn.monashlibrary.Books.InnerBooks;
+package finnhartshorn.monashlibrary.Books;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Finn Hartshorn on 3/05/2017.
  */
 
-public class Book {
+public class Book implements Parcelable {
 //    private String mISBN;
     private String mTitle;
     private String mThumbnail;
@@ -22,6 +25,40 @@ public class Book {
         mThumbnail = thumbnail;
         mPubDate = pubDate;
     }
+
+    protected Book(Parcel in) {
+        mTitle = in.readString();
+        mThumbnail = in.readString();
+        mAuthor = in.readString();
+        mPubDate = in.readString();
+        mISBN = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTitle);
+        dest.writeString(mThumbnail);
+        dest.writeString(mAuthor);
+        dest.writeString(mPubDate);
+        dest.writeString(mISBN);
+    }
+
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 
     // Generated getters and setters
     public String getAuthor() {
@@ -58,4 +95,5 @@ public class Book {
     public String getISBN() { return mISBN; }
 
     public void setISBN(String mISBN) { this.mISBN = mISBN; }
+
 }

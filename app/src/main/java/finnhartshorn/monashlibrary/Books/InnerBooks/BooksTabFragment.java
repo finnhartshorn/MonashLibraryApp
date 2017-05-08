@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import finnhartshorn.monashlibrary.Books.Book;
 import finnhartshorn.monashlibrary.Books.OuterBookAdapter;
 import finnhartshorn.monashlibrary.R;
 
@@ -145,5 +146,5 @@ public class BooksTabFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
     }
-    
+
 }
