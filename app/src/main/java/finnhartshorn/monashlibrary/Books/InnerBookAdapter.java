@@ -1,6 +1,7 @@
-package finnhartshorn.monashlibrary.Books.InnerBooks;
+package finnhartshorn.monashlibrary.Books;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,25 +16,25 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.Books.Book;
 import finnhartshorn.monashlibrary.R;
 
 /**
  * Created by Finn Hartshorn on 3/05/2017.
  */
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
+public class InnerBookAdapter extends RecyclerView.Adapter<InnerBookAdapter.BookViewHolder> {
 
     private final Context context;    // Needed for using Glide for image fetching and caching
 
-    private static final String TAG = "BookAdapter";
+    private static final String TAG = "InnerBookAdapter";
 
-    private ArrayList<Book> mBookList;
+    protected ArrayList<Book> mBookList;
+    private BookViewHolder bookViewHolder;
 
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     private StorageReference thumbnailsReference = storageReference.child("cover-images");
 
-    public BookAdapter(Context context, ArrayList<Book> bookList) {
+    public InnerBookAdapter(Context context, ArrayList<Book> bookList) {
         this.context = context;
         mBookList = new ArrayList<Book>(bookList);
     }
@@ -42,7 +43,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public BookViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_card_view, parent, false);
 
-        BookViewHolder bookViewHolder = new BookViewHolder(v);
+        bookViewHolder = new BookViewHolder(v, this);
 
         return bookViewHolder;
     }
@@ -69,16 +70,28 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         return mBookList.size();
     }
 
+
     public static class BookViewHolder extends RecyclerView.ViewHolder {
 
         protected ImageView mCoverImageView;
+        private final InnerBookAdapter innerBookAdapter;
 
-        public BookViewHolder(View itemView) {
+        public BookViewHolder(View itemView, InnerBookAdapter parent) {
             super(itemView);
+            innerBookAdapter = parent;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Book clickedBook = innerBookAdapter.mBookList.get(getAdapterPosition());
+                    Log.d(TAG, clickedBook.getTitle() + " clicked");
+                    Intent newIntent = new Intent(innerBookAdapter.context, BookDetailsActivity.class);
+                    newIntent.putExtra("Book", clickedBook);
+
+                    innerBookAdapter.context.startActivity(newIntent);
+                }
+            });
             mCoverImageView = (ImageView) itemView.findViewById(R.id.coverImageView);
         }
-
-
         public ImageView getCoverImageView() { return mCoverImageView; }
     }
 }

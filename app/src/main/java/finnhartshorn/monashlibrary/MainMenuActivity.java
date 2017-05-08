@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import finnhartshorn.monashlibrary.Books.InnerBooks.BooksTabFragment;
+import finnhartshorn.monashlibrary.Books.BooksTabFragment;
 import layout.Info;
 import finnhartshorn.monashlibrary.Locations.LocationsTabFragment;
 
@@ -34,17 +34,12 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
     private static final String TAG = "MainActivity";
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference mThumbnailRef = mRootRef.child("thumbnails");
+//    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+//    private DatabaseReference mThumbnailRef = mRootRef.child("thumbnails");
 
 
-    private DatabaseReference mDatabase;
+//    private DatabaseReference mDatabase;
 
-//    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
 
     @Override
@@ -54,9 +49,6 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-//        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
@@ -72,30 +64,22 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
             tab.setCustomView(pagerAdapter.getTabView(i));
         }
 
+        mAuth = FirebaseAuth.getInstance();
 
-//        mViewPager = (ViewPager) findViewById(R.id.container);
-//        mViewPager.setAdapter(mSectionsPagerAdapter);
-//
-//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-//        tabLayout.setupWithViewPager(mViewPager);
+        mAuth.signInAnonymously().addOnCompleteListener(this);
 
-//        mAuth = FirebaseAuth.getInstance();
-//
-//        mAuth.signInAnonymously().addOnCompleteListener(this);
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check is user is signed in
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//
-//        if (currentUser == null) {
-//            mAuth.signInAnonymously();
-//        }
+        // Check if user is signed in
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        if (currentUser == null) {
+            mAuth.signInAnonymously();
+        }
     }
 
     private void signInAnonymously() {
@@ -172,25 +156,9 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
             fragment.setArguments(args);
             return fragment;
         }
-
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//            if(getArguments().getInt(ARG_SECTION_NUMBER)== 1) {
-//                View rootView = inflater.inflate(R.layout.fragment_books, container, false);
-//                return rootView;
-//            } else if(getArguments().getInt(ARG_SECTION_NUMBER)== 2) {
-//                View rootView = inflater.inflate(R.layout.fragment_locations, container, false);
-//                return rootView;
-//            } else if(getArguments().getInt(ARG_SECTION_NUMBER)== 3) {
-//                View rootView = inflater.inflate(R.layout.fragment_info, container, false);
-//                return rootView;
-//            } else {
-//                throw new RuntimeException("Invalid tab");
-//            }
-//        }
     }
 
+    // Pager adapter is used to instantiate pages inside a ViewPager
     class PagerAdapter extends FragmentPagerAdapter {
 
         String tabTitles[] = new String[] {"Books", "Locations", "Info"};

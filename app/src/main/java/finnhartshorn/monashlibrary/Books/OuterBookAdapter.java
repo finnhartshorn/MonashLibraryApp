@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 ;import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.Books.InnerBooks.BookAdapter;
 import finnhartshorn.monashlibrary.R;
 
 /**
@@ -44,7 +43,7 @@ public class OuterBookAdapter extends RecyclerView.Adapter<OuterBookAdapter.Oute
 
     @Override
     public void onBindViewHolder(OuterBookViewHolder holder, int position) {
-        holder.getBookAdapter().updateDataset(mDataset.get(position));
+        holder.getInnerBookAdapter().updateDataset(mDataset.get(position));
         holder.getTitleTextView().setText(mDatasetTitles.get(position));
     }
 
@@ -59,7 +58,7 @@ public class OuterBookAdapter extends RecyclerView.Adapter<OuterBookAdapter.Oute
     }
 
     public class OuterBookViewHolder extends RecyclerView.ViewHolder {
-        private BookAdapter bookAdapter;
+        private InnerBookAdapter innerBookAdapter;
         private TextView titleTextView;
 
         public OuterBookViewHolder(View itemView) {
@@ -69,16 +68,16 @@ public class OuterBookAdapter extends RecyclerView.Adapter<OuterBookAdapter.Oute
             innerBookRecyclerView = (RecyclerView)itemView.findViewById(R.id.outer_RecyclerView);
             innerBookRecyclerView.setHasFixedSize(true);
 
-            bookAdapter = new BookAdapter(context, new ArrayList<Book>());
-            innerBookRecyclerView.setAdapter(bookAdapter);
+            innerBookAdapter = new InnerBookAdapter(context, new ArrayList<Book>());
+            innerBookRecyclerView.setAdapter(innerBookAdapter);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             innerBookRecyclerView.setLayoutManager(linearLayoutManager);
 
         }
 
-        public BookAdapter getBookAdapter() {
-            return bookAdapter;
+        public InnerBookAdapter getInnerBookAdapter() {
+            return innerBookAdapter;
         }
 
         public TextView getTitleTextView() {

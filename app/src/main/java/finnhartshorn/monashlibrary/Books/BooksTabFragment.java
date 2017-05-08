@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Books.InnerBooks;
+package finnhartshorn.monashlibrary.Books;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -57,7 +57,7 @@ public class BooksTabFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        initDataset();
-//        mAdapter = new BookAdapter(mDataset);
+//        mAdapter = new InnerBookAdapter(mDataset);
 //        Log.d(TAG, "Test");
     }
 
@@ -138,7 +138,7 @@ public class BooksTabFragment extends Fragment {
 //        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.books_recycler_view);
 //        recyclerView.setHasFixedSize(true);
 ////        initDataset();
-//        mAdapter = new BookAdapter(getActivity(), mDataset);
+//        mAdapter = new InnerBookAdapter(getActivity(), mDataset);
 //        recyclerView.setAdapter(mAdapter);
 //
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());

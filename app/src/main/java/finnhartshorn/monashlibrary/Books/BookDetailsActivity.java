@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,9 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import finnhartshorn.monashlibrary.R;
 
@@ -51,7 +55,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         authorTextView.setText(displayBook.getAuthor());
         genreTextView.setText("PLACEHOLDER");
         ISBNTextView.setText(displayBook.getISBN());
-        yearTextView.setText(displayBook.getPublicationDate());             // TODO: Get year from publication date; use date format to store?
+        yearTextView.setText(Integer.toString(displayBook.getPublicationYear()));
+
 
         StorageReference coverReference = thumbnailsReference.child(displayBook.getThumbnail());          //TODO: This could fail, handle that
 
@@ -63,5 +68,15 @@ public class BookDetailsActivity extends AppCompatActivity {
         // Gets reference to action bar and enables up button
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

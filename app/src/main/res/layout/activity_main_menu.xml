@@ -29,12 +29,8 @@
         android:background="?attr/colorPrimary"
         android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"/>
-        <!--app:tabTextColor="#d3d3d3"-->
-        <!--app:tabSelectedTextColor="#ffffff"-->
-        <!--app:tabIndicatorColor="#ff00ff"-->
-        <!--/>-->
 
-    <android.support.v4.view.ViewPager
+    <finnhartshorn.monashlibrary.CustomViewPager
         android:id="@+id/container"
         android:layout_below="@+id/tabs"
         android:layout_width="match_parent"
