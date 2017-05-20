@@ -56,7 +56,7 @@ public class BooksTabFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        initDataset();
-//        mAdapter = new InnerBookAdapter(mDataset);
+//        mAdapter = new InnerBookAdapter(mBooklist);
 //        Log.d(TAG, "Test");
     }
 
@@ -79,7 +79,7 @@ public class BooksTabFragment extends Fragment {
 //
 //        ArrayList<String> titles = new ArrayList();
 //        titles.add("Recently Added");
-//        mAdapter = new OuterBookAdapter(titles, mDataset);
+//        mAdapter = new OuterBookAdapter(titles, mBooklist);
 //        recyclerView.setAdapter(mAdapter);
 //
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -106,7 +106,6 @@ public class BooksTabFragment extends Fragment {
                 }
                 for (DataSnapshot bookSnapshot: dataSnapshot.getChildren()) {
                     Book book = bookSnapshot.getValue(Book.class);
-//                    book.setISBN(bookSnapshot.getKey());
                     mDataset.get(0).add(book);
                 }
                 mAdapter.updateDataset(mDataset);
@@ -121,7 +120,7 @@ public class BooksTabFragment extends Fragment {
 
         Log.d(TAG, "Initialised Dataset, length: " + Integer.toString(mDataset.size()));
 
-        // Do firebase stuffs
+        // Get and configure recycler view
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.books_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -131,15 +130,6 @@ public class BooksTabFragment extends Fragment {
         mAdapter = new OuterBookAdapter(titles, mDataset);
         recyclerView.setAdapter(mAdapter);
 
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//
-//        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.books_recycler_view);
-//        recyclerView.setHasFixedSize(true);
-////        initDataset();
-//        mAdapter = new InnerBookAdapter(getActivity(), mDataset);
-//        recyclerView.setAdapter(mAdapter);
-//
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);

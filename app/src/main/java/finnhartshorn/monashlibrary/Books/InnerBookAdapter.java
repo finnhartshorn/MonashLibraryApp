@@ -37,7 +37,7 @@ public class InnerBookAdapter extends RecyclerView.Adapter<InnerBookAdapter.Book
 
     public InnerBookAdapter(Context context, ArrayList<Book> bookList) {
         this.context = context;
-        mBookList = new ArrayList<Book>(bookList);
+        mBookList = new ArrayList<>(bookList);
     }
 
     @Override
@@ -72,9 +72,9 @@ public class InnerBookAdapter extends RecyclerView.Adapter<InnerBookAdapter.Book
     }
 
 
-    public static class BookViewHolder extends RecyclerView.ViewHolder {
+    protected static class BookViewHolder extends RecyclerView.ViewHolder {
 
-        protected ImageView mCoverImageView;
+        private ImageView mCoverImageView;
         private final InnerBookAdapter innerBookAdapter;
 
         public BookViewHolder(View itemView, InnerBookAdapter parent) {
@@ -93,6 +93,6 @@ public class InnerBookAdapter extends RecyclerView.Adapter<InnerBookAdapter.Book
             });
             mCoverImageView = (ImageView) itemView.findViewById(R.id.coverImageView);
         }
-        public ImageView getCoverImageView() { return mCoverImageView; }
+        protected ImageView getCoverImageView() { return mCoverImageView; }
     }
 }
