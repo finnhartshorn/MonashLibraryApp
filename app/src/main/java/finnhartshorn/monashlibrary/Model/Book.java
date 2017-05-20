@@ -1,6 +1,5 @@
-package finnhartshorn.monashlibrary.Books;
+package finnhartshorn.monashlibrary.Model;
 
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -8,9 +7,11 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -28,12 +29,13 @@ public class Book implements Parcelable {
     private Date mPubDate;
     private String mISBN;
     private String mGenre;
+    private Availability mAvailability;
 
     public Book() {
         // This is needed for Firebase
     }
 
-    public Book(String Author, String pubDate, String thumbnail, String title, String genre){
+    public Book(String Author, String pubDate, String thumbnail, String title, String genre, Availability availability){
 
         mAuthor = Author;
         mTitle = title;
@@ -45,6 +47,7 @@ public class Book implements Parcelable {
             Log.e(TAG, "Error parsing date: ", e);
         }
         mGenre = genre;
+        mAvailability = availability;
     }
 
     protected Book(Parcel in) {
@@ -57,7 +60,12 @@ public class Book implements Parcelable {
         } catch (ParseException e) {
             Log.e(TAG, "Error parsing date: ", e);
         }
+        mGenre = in.readString();
         mISBN = in.readString();
+        mAvailability = new Availability(
+                Status.valueOf(in.readString()),
+                Status.valueOf(in.readString()),
+                Status.valueOf(in.readString()));
     }
 
     @Override
@@ -73,7 +81,11 @@ public class Book implements Parcelable {
         String temp = dateFormat.format(mPubDate);
         Log.d(TAG, temp);
         dest.writeString(temp);
+        dest.writeString(mGenre);
         dest.writeString(mISBN);
+        dest.writeString(mAvailability.getClayton().name());
+        dest.writeString(mAvailability.getCaulfield().name());
+        dest.writeString(mAvailability.getPeninsula().name());
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
@@ -142,4 +154,18 @@ public class Book implements Parcelable {
         calendar.setTime(mPubDate);
         return calendar.get(calendar.YEAR);
     }
+
+    public Availability getAvailability() {
+        return mAvailability;
+    }
+
+//    public void setAvailability(Availability availability) {
+//        mAvailability = availability;
+//    }
+
+    public void setAvailability(HashMap<String, String> availability) {     // Firebase stores nested json as a hashmap of strings to strings
+        Log.d(TAG, "Availability set");
+        mAvailability = new Availability(availability);
+    }
+
 }

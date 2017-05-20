@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import finnhartshorn.monashlibrary.Model.Location;
 import finnhartshorn.monashlibrary.R;
 
 /**

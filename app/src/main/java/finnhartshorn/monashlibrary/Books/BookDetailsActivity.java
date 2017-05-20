@@ -13,9 +13,8 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
+import finnhartshorn.monashlibrary.Model.Availability;
+import finnhartshorn.monashlibrary.Model.Book;
 import finnhartshorn.monashlibrary.R;
 
 public class BookDetailsActivity extends AppCompatActivity {
@@ -27,6 +26,9 @@ public class BookDetailsActivity extends AppCompatActivity {
     private TextView genreTextView;
     private TextView ISBNTextView;
     private TextView yearTextView;
+    private TextView claytonTextView;
+    private TextView caulfieldTextView;
+    private TextView peninsulaTextView;
     private ImageView coverImageView;
 //    private TextView TextView;
 
@@ -45,6 +47,9 @@ public class BookDetailsActivity extends AppCompatActivity {
         genreTextView = (TextView) findViewById(R.id.detail_genre_textView);
         ISBNTextView = (TextView) findViewById(R.id.detail_ISBN_textView);
         yearTextView = (TextView) findViewById(R.id.detail_year_textView);
+        claytonTextView = (TextView) findViewById(R.id.clayton_availability_textView);
+        caulfieldTextView = (TextView) findViewById(R.id.caulfield_availability__textView);
+        peninsulaTextView = (TextView) findViewById(R.id.peninsula_availability__textView);
         // And imageView
         coverImageView = (ImageView) findViewById(R.id.book_cover_imageView);
 
@@ -53,9 +58,13 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         titleTextView.setText(displayBook.getTitle());
         authorTextView.setText(displayBook.getAuthor());
-        genreTextView.setText("PLACEHOLDER");
+        genreTextView.setText(displayBook.getGenre());
         ISBNTextView.setText(displayBook.getISBN());
         yearTextView.setText(Integer.toString(displayBook.getPublicationYear()));
+        Availability availability = displayBook.getAvailability();
+        claytonTextView.setText(availability.getClayton().name());
+        caulfieldTextView.setText(availability.getCaulfield().name());
+        peninsulaTextView.setText(availability.getPeninsula().name());
 
 
         StorageReference coverReference = thumbnailsReference.child(displayBook.getThumbnail());          //TODO: This could fail, handle that

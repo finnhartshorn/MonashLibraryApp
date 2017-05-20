@@ -16,6 +16,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import finnhartshorn.monashlibrary.Model.Book;
 import finnhartshorn.monashlibrary.R;
 
 /**

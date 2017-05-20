@@ -1,8 +1,10 @@
 package finnhartshorn.monashlibrary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import finnhartshorn.monashlibrary.Books.BookSearchActivity;
 import finnhartshorn.monashlibrary.Books.BooksTabFragment;
 import layout.Info;
 import finnhartshorn.monashlibrary.Locations.LocationsTabFragment;
@@ -42,6 +46,9 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
 
     private ViewPager mViewPager;
 
+    // Stores a reference to menu so the search icon can be hidden when not in the books tab
+    private Menu menu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +62,24 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
         PagerAdapter pagerAdapter =
                 new PagerAdapter(getSupportFragmentManager(), MainMenuActivity.this);
         viewPager.setAdapter(pagerAdapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {                // Adds a Page listener to react whenever the active tab changes
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {                      // If the current tab is not the book tab, hide the search icon
+                if (position == 0) {
+                    setSearchVisibility(true);
+                } else {
+                    setSearchVisibility(false);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -90,8 +115,15 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main_menu, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        this.menu = menu;
         return true;
+    }
+
+    private void setSearchVisibility(boolean visibility) {
+        MenuItem search = menu.findItem(R.id.action_search);
+        search.setVisible(visibility);
     }
 
     @Override
@@ -102,7 +134,11 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
+            Log.d(TAG, "Search attempted");
+            Intent searchIntent = new Intent(this, BookSearchActivity.class);
+            startActivity(searchIntent);
+        } else if (id == R.id.action_settings) {
             return true;
         }
 
@@ -174,6 +210,7 @@ public class MainMenuActivity extends AppCompatActivity implements OnCompleteLis
 
             switch (position) {
                 case 0:
+
                     return new BooksTabFragment();
                 case 1:
                     return new LocationsTabFragment();

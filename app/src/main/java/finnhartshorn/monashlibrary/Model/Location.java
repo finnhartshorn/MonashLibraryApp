@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Locations;
+package finnhartshorn.monashlibrary.Model;
 
 /**
  * Created by Finn Hartshorn on 4/05/2017.

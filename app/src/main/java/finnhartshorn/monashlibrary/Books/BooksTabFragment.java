@@ -18,8 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.Books.Book;
-import finnhartshorn.monashlibrary.Books.OuterBookAdapter;
+import finnhartshorn.monashlibrary.Model.Book;
 import finnhartshorn.monashlibrary.R;
 
 public class BooksTabFragment extends Fragment {
@@ -107,7 +106,7 @@ public class BooksTabFragment extends Fragment {
                 }
                 for (DataSnapshot bookSnapshot: dataSnapshot.getChildren()) {
                     Book book = bookSnapshot.getValue(Book.class);
-                    book.setISBN(bookSnapshot.getKey());
+//                    book.setISBN(bookSnapshot.getKey());
                     mDataset.get(0).add(book);
                 }
                 mAdapter.updateDataset(mDataset);

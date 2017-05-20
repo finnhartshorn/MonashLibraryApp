@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 ;import java.util.ArrayList;
 
+import finnhartshorn.monashlibrary.Model.Book;
 import finnhartshorn.monashlibrary.R;
 
 /**
  * Created by Finn Hartshorn on 7/05/2017.
  */
 
+// This book adapter handles the recycler view that contains cards of books, each card contains another recycler view containing the individual books
 public class OuterBookAdapter extends RecyclerView.Adapter<OuterBookAdapter.OuterBookViewHolder> {
     private static final String TAG = "OuterBookAdapter";
 
