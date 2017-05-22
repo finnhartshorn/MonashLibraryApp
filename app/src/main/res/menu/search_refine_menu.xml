@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/items_found"
-        android:title="REFINE"
-        app:showAsAction="always"/>
     <item android:id="@+id/sortby_action"
-        android:title="REFINE"
-        app:showAsAction="always"/>
+        android:title="sort"
+        android:icon="@drawable/ic_sort"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/refine_added"
+                android:title="Sort by Date Added"
+                android:checkable="true"/>
+            <item android:id="@+id/refine_title"
+                android:title="Sort by Title"
+                android:checkable="true"/>
+            <item android:id="@+id/refine_author"
+                android:title="Sort by Author"
+                android:checkable="true"/>
+            <item android:id="@+id/refine_year"
+                android:title="Sort by Year"
+                android:checkable="true"/>
+        </menu>
+        </item>
     <item android:id="@+id/refine_text"
         android:title="REFINE"
         app:showAsAction="always"/>

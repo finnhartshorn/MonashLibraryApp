@@ -35,6 +35,10 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
     private ArrayList<Book> mUnfilteredBookList;
     private BookFilter mBookFilter = new BookFilter();
 
+    private enum sortFields {
+        Title, Author, Date
+    }
+
 
     public BookSearchAdapter(Context context, ArrayList<Book> bookList) {
         super(context, null, bookList);

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Filter;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +36,8 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
     private RecyclerView mRecyclerView;
     private BookSearchAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
+    // Items found textview reference
+    private TextView mItemsFoundTextView;
 
     ArrayList<Book> mBooklist = new ArrayList<Book>();
 
@@ -53,6 +56,8 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         setSupportActionBar(tb);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Get ref to items count text view
+        mItemsFoundTextView = (TextView) findViewById(R.id.items_found);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
         Query mBookQuery = mRootRef.child("books");
@@ -66,6 +71,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
                     Log.d(TAG, "Added book: " + book.getTitle());
                 }
                 mAdapter.updateDataset(mBooklist);
+                updateListCount();
             }
 
             @Override
@@ -109,8 +115,6 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
             });
         }
 
-
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -126,12 +130,12 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-//        // Searching is done whenever the query text changes, this just closes the keyboard when the user presses enter/submit
-//        View view = this.getCurrentFocus();
-//        if (view != null) {
-//            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//        }
+        // Searching is done whenever the query text changes, this just closes the keyboard when the user presses enter/submit
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
         return true;
     }
 
@@ -141,13 +145,13 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
 
             @Override
             public void onFilterComplete(int count) {
-                UpdateListCount(count);
+                updateListCount();
             }
         });
         return false;
     }
 
-    private void UpdateListCount(int count) {
-        //TODO: Update list count
+    private void updateListCount() {
+        mItemsFoundTextView.setText(mAdapter.getItemCount() + " items found");
     }
 }

@@ -34,9 +34,10 @@
             app:layout_scrollFlags="">
 
             <TextView
+                android:id="@+id/items_found"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="# items found"/>
+                android:text=""/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
