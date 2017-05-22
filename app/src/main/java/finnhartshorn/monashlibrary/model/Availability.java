@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Model;
+package finnhartshorn.monashlibrary.model;
 
 import android.util.Log;
 

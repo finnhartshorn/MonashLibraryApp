@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Books;
+package finnhartshorn.monashlibrary.books;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-;import java.util.ArrayList;
+import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.Model.Book;
+import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
 /**

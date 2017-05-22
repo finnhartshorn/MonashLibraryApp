@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Books;
+package finnhartshorn.monashlibrary.books;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.Model.Book;
+import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
 /**

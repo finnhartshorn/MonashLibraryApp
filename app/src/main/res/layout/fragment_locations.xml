@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Locations.LocationsTabFragment">
+    tools:context=".locations.LocationsTabFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/books_recycler_view"

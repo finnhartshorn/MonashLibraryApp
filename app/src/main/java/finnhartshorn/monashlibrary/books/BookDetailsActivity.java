@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Books;
+package finnhartshorn.monashlibrary.books;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -13,8 +13,8 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import finnhartshorn.monashlibrary.Model.Availability;
-import finnhartshorn.monashlibrary.Model.Book;
+import finnhartshorn.monashlibrary.model.Availability;
+import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
 public class BookDetailsActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Locations;
+package finnhartshorn.monashlibrary.locations;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.Model.Location;
+import finnhartshorn.monashlibrary.model.Location;
 import finnhartshorn.monashlibrary.R;
 
 /**

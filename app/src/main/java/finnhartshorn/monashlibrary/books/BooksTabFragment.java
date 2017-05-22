@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Books;
+package finnhartshorn.monashlibrary.books;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.Model.Book;
+import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
 public class BooksTabFragment extends Fragment {

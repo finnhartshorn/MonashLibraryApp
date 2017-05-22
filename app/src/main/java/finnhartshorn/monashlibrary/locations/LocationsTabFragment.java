@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Locations;
+package finnhartshorn.monashlibrary.locations;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.Model.Location;
+import finnhartshorn.monashlibrary.model.Location;
 import finnhartshorn.monashlibrary.R;
 
 

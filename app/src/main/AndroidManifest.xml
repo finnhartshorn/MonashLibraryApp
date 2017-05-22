@@ -23,8 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Books.BookDetailsActivity" />
-        <activity android:name=".Books.BookSearchActivity"></activity>
+        <activity android:name=".books.BookDetailsActivity" />
+        <activity android:name=".books.BookSearchActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

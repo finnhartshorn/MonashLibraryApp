@@ -1,4 +1,4 @@
-package finnhartshorn.monashlibrary.Model;
+package finnhartshorn.monashlibrary.model;
 
 /**
  * Created by Finn Hartshorn on 4/05/2017.
