@@ -43,21 +43,9 @@ public class BooksTabFragment extends Fragment {
         // Required empty public constructor
     }
 
-// Unsure of what this actually does
-//    public static BooksTabFragment newInstance(String param1, String param2) {
-//        BooksTabFragment fragment = new BooksTabFragment();
-////        Bundle args = new Bundle();
-////        args.putString(ARG_PARAM1, param1);
-////        fragment.setArguments(args);
-//        return fragment;
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        initDataset();
-//        mAdapter = new InnerBookAdapter(mBooklist);
-//        Log.d(TAG, "Test");
     }
 
     @Override
@@ -72,20 +60,7 @@ public class BooksTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_books, container, false);
-
-//        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.books_recycler_view);
-//        recyclerView.setHasFixedSize(true);
-//
-//        ArrayList<String> titles = new ArrayList();
-//        titles.add("Recently Added");
-//        mAdapter = new OuterBookAdapter(titles, mBooklist);
-//        recyclerView.setAdapter(mAdapter);
-//
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(linearLayoutManager);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_books, container, false);
     }
 
     @Override
@@ -93,17 +68,19 @@ public class BooksTabFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        Query mBookQuery;
+        Query mBookQuery, mBookQuery2;
         mBookQuery = mRootRef.child("books").limitToFirst(10);
+        mBookQuery2 = mRootRef.child("books").orderByChild("title");
+
+        for (int i = 0; i < 2; i++) {
+            mDataset.add(new ArrayList<Book>());
+        }
 
         mBookQuery.addValueEventListener(new ValueEventListener() {             // TODO: Seperate class, this class?
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (mDataset.size() == 0){
-                    mDataset.add(new ArrayList<Book>());
-                } else {
-                    mDataset.set(0, new ArrayList<Book>());
-                }
+                mDataset.set(0, new ArrayList<Book>());
+
                 for (DataSnapshot bookSnapshot: dataSnapshot.getChildren()) {
                     Book book = bookSnapshot.getValue(Book.class);
                     mDataset.get(0).add(book);
@@ -118,6 +95,26 @@ public class BooksTabFragment extends Fragment {
             }
         });
 
+        mBookQuery2.addValueEventListener(new ValueEventListener() {             // TODO: FIX THIS, IT IS BAD
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mDataset.set(1, new ArrayList<Book>());
+
+                for (DataSnapshot bookSnapshot: dataSnapshot.getChildren()) {
+                    Book book = bookSnapshot.getValue(Book.class);
+                    mDataset.get(1).add(book);
+                }
+                mAdapter.updateDataset(mDataset);
+                Log.d(TAG, "New dataset, length: " + Integer.toString(mDataset.size()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "Failed loading books", databaseError.toException());
+            }
+        });
+
+
         Log.d(TAG, "Initialised Dataset, length: " + Integer.toString(mDataset.size()));
 
         // Get and configure recycler view
@@ -127,6 +124,7 @@ public class BooksTabFragment extends Fragment {
 
         ArrayList<String> titles = new ArrayList();
         titles.add("Recently Added");
+        titles.add("Popular Books");
         mAdapter = new OuterBookAdapter(titles, mDataset);
         recyclerView.setAdapter(mAdapter);
 
