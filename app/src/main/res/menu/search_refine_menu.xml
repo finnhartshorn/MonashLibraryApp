@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/items_found"
+        android:title="REFINE"
+        app:showAsAction="always"/>
+    <item android:id="@+id/sortby_action"
+        android:title="REFINE"
+        app:showAsAction="always"/>
+    <item android:id="@+id/refine_text"
+        android:title="REFINE"
+        app:showAsAction="always"/>
+</menu>

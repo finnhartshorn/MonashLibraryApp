@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,17 +25,22 @@ import finnhartshorn.monashlibrary.R;
  * Created by Finn Hartshorn on 22/05/2017.
  */
 
-public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAdapter.OnViewHolderClick{
+public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAdapter.OnViewHolderClick, Filterable {
 
     private static final String TAG = "BookSearchAdapter";
 
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     private StorageReference thumbnailsReference = storageReference.child("cover-images");
 
+    private ArrayList<Book> mUnfilteredBookList;
+    private BookFilter mBookFilter = new BookFilter();
+
 
     public BookSearchAdapter(Context context, ArrayList<Book> bookList) {
         super(context, null, bookList);
         setOnClickListener(this);
+        mUnfilteredBookList = bookList;
+
     }
 
     @Override
@@ -82,10 +89,7 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
             } else {
                 mPeninsulaAvailability.setVisibility(View.INVISIBLE);
             }
-
         }
-
-
     }
 
     @Override
@@ -95,5 +99,44 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
         newIntent.putExtra("Book", book);
 
         getContext().startActivity(newIntent);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return mBookFilter;
+    }
+
+    private class BookFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            String filterString = constraint.toString().toLowerCase();
+            FilterResults filterResults = new FilterResults();
+
+            // If there isn't a query, don't filter and just return the list
+            if (filterString == null || filterString.length() == 0){
+                filterResults.values = mUnfilteredBookList;                    // cast to ArrayList<Book> ?
+                filterResults.count = mUnfilteredBookList.size();
+            } else {
+//                final ArrayList<Book> unfilteredList = (ArrayList<Book>) getDataset();
+
+                final ArrayList<Book> tempFilteredBookList = new ArrayList<>();             // Temp list to hold subset of filtered list, don't want the view to update until filtering is complete
+
+                // Iterate through original book list, if title or author contains the search query, add to filtered list
+                for (Book book: mUnfilteredBookList) {
+                    if (book.getTitle().toLowerCase().contains(filterString) || book.getAuthor().toLowerCase().contains(filterString)) {
+                        tempFilteredBookList.add(book);
+                    }
+                }
+                filterResults.values = tempFilteredBookList;
+                filterResults.count = tempFilteredBookList.size();
+            }
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            updateDataset((ArrayList<Book>) results.values);
+        }
     }
 }
