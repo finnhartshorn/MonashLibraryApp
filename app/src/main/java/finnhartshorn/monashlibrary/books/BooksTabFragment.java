@@ -29,7 +29,7 @@ public class BooksTabFragment extends Fragment {
     private OuterBookAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
-    ArrayList<ArrayList<Book>> mDataset = new ArrayList<ArrayList<Book>>();
+    ArrayList<ArrayList<Book>> mDataset;
 
 
     // Database references
@@ -66,6 +66,8 @@ public class BooksTabFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mDataset = new ArrayList<ArrayList<Book>>();
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
         Query mBookQuery, mBookQuery2;

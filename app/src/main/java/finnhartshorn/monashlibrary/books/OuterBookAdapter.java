@@ -3,6 +3,7 @@ package finnhartshorn.monashlibrary.books;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +46,12 @@ public class OuterBookAdapter extends RecyclerView.Adapter<OuterBookAdapter.Oute
 
     @Override
     public void onBindViewHolder(OuterBookViewHolder holder, int position) {
-        holder.getInnerBookAdapter().updateDataset(mDataset.get(position));
-        holder.getTitleTextView().setText(mDatasetTitles.get(position));
+        if (position < mDataset.size() && position < mDatasetTitles.size()) {       // TODO: Find out why this is happening
+            holder.getInnerBookAdapter().updateDataset(mDataset.get(position));
+            holder.getTitleTextView().setText(mDatasetTitles.get(position));
+        } else {
+            Log.e(TAG, "Error position: " + position + " dataset size: " + mDataset.size());
+        }
     }
 
     @Override

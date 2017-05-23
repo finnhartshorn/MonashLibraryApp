@@ -5,17 +5,18 @@
         android:title="sort"
         android:icon="@drawable/ic_sort"
         app:showAsAction="always">
-        <menu>
-            <item android:id="@+id/refine_added"
+        <menu android:title="sort_menu"
+            android:id="@+id/sortby_menu">
+            <item android:id="@+id/sort_added"
                 android:title="Sort by Date Added"
                 android:checkable="true"/>
-            <item android:id="@+id/refine_title"
+            <item android:id="@+id/sort_title"
                 android:title="Sort by Title"
                 android:checkable="true"/>
-            <item android:id="@+id/refine_author"
+            <item android:id="@+id/sort_author"
                 android:title="Sort by Author"
                 android:checkable="true"/>
-            <item android:id="@+id/refine_year"
+            <item android:id="@+id/sort_year"
                 android:title="Sort by Year"
                 android:checkable="true"/>
         </menu>

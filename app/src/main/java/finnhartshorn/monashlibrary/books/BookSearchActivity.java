@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Filter;
@@ -114,6 +116,11 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
                 }
             });
         }
+        ActionMenuItemView subMenu = (ActionMenuItemView) findViewById(R.id.sortby_action);
+        Log.d(TAG, "Submenu length: " + subMenu);
+
+        View view = (View) findViewById(R.id.sortby_action);
+        Log.d(TAG, "Submenu length: " + view);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -124,6 +131,9 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            default:
+                Log.d(TAG, "ITEM CLICKED: " + item.getTitle());
+
         }
         return super.onOptionsItemSelected(item);
     }
