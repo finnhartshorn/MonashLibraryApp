@@ -7,18 +7,22 @@
         app:showAsAction="always">
         <menu android:title="sort_menu"
             android:id="@+id/sortby_menu">
-            <item android:id="@+id/sort_added"
-                android:title="Sort by Date Added"
-                android:checkable="true"/>
-            <item android:id="@+id/sort_title"
-                android:title="Sort by Title"
-                android:checkable="true"/>
-            <item android:id="@+id/sort_author"
-                android:title="Sort by Author"
-                android:checkable="true"/>
-            <item android:id="@+id/sort_year"
-                android:title="Sort by Year"
-                android:checkable="true"/>
+            <group
+                android:id="@+id/sort_group"
+                android:checkableBehavior="single">
+                <item android:id="@+id/sort_added"
+                    android:title="Sort by Date Added"
+                    android:checkable="true"/>
+                <item android:id="@+id/sort_title"
+                    android:title="Sort by Title"
+                    android:checkable="true"/>
+                <item android:id="@+id/sort_author"
+                    android:title="Sort by Author"
+                    android:checkable="true"/>
+                <item android:id="@+id/sort_year"
+                    android:title="Sort by Year"
+                    android:checkable="true"/>
+            </group>
         </menu>
         </item>
     <item android:id="@+id/refine_text"

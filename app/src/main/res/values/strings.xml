@@ -1,6 +1,22 @@
 <resources>
     <string name="app_name">Monash Library</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="locations">
+        <item>Clayton</item>
+        <item>Caulfield</item>
+        <item>Peninsula</item>
+    </string-array>
+    <string-array name="genres">
+        <item>Science Fiction</item>
+        <item>Adventure</item>
+        <item>Non-fiction</item>
+        <item>Fantasy</item>
+        <item>Dystopian</item>
+    </string-array>
+
+
+
     <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->

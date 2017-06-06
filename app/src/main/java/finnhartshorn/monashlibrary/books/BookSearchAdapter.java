@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import finnhartshorn.monashlibrary.GenericAdapter;
 import finnhartshorn.monashlibrary.model.Book;
@@ -35,17 +37,19 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
     private ArrayList<Book> mUnfilteredBookList;
     private BookFilter mBookFilter = new BookFilter();
 
-    private enum sortFields {
-        Title, Author, Date
-    }
-
 
     public BookSearchAdapter(Context context, ArrayList<Book> bookList) {
         super(context, null, bookList);
         setOnClickListener(this);
         mUnfilteredBookList = bookList;
-
     }
+
+    public void updateBooklist(ArrayList<Book> nDataset) {
+        mUnfilteredBookList =  nDataset;
+        super.updateDataset(nDataset);
+    }
+
+    //    public void setSortMethod(SortMethod sortMethod) {}
 
     @Override
     protected View createView(Context context, ViewGroup viewGroup, int viewType) {
