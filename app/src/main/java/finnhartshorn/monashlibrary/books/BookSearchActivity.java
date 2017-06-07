@@ -33,6 +33,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
@@ -59,6 +61,10 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
     // Database references
     private DatabaseReference mRootRef;
 
+    // Stores the locations and genres that can be filtered
+    private List<String> genres;
+    private List<String> locations;
+
     ArrayList<Book> mBooklist = new ArrayList<>();
 
     @Override
@@ -71,8 +77,11 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
             Log.d(TAG, "Added book: " + book.getTitle());
         }
         mAdapter.updateBooklist(mBooklist);
-
-        updateListCount();
+        try {                   // TODO: Maybe change this?
+            onQueryTextChange(mSearchView.getQuery().toString());           // After the data is changed, reapplies the search query
+        } catch (NullPointerException e) {                                  // The search bar isn't created when this first runs,
+            updateListCount();
+        }
     }
 
     @Override
@@ -110,15 +119,19 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        genres = Arrays.asList(getResources().getStringArray(R.array.genres));
+        locations = Arrays.asList(getResources().getStringArray(R.array.locations));
     }
+
+
 
     private void setSortQuery(Query query) {                    // Changes the firebase query and refreshes the recyclerview and count
         query.removeEventListener(this);
         mBookQuery = query;
         query.addValueEventListener(this);
-        mAdapter.updateDataset(mBooklist);
-        onQueryTextChange(mSearchView.getQuery().toString());           // After the data is changed, reapplies the search query
-        updateListCount();
+//        mAdapter.updateDataset(mBooklist);
+//        onQueryTextChange(mSearchView.getQuery().toString());           // After the data is changed, reapplies the search query
     }
 
 
@@ -130,7 +143,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         MenuItem searchItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         mSearchView.setOnQueryTextListener(this);
-        mSearchView.getQuery();
+//        mSearchView.getQuery();
 
         // Inflate and init second toolbar          https://stackoverflow.com/questions/32808996/android-add-two-toolbars-in-the-same-activity
         Toolbar secondToolbar = (Toolbar) findViewById(R.id.search_refine_toolbar);
@@ -192,6 +205,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
                     case R.id.sort_title:
                         selectedSortMethod = item.getItemId();
                         setSortQuery(mRootRef.child("books").orderByChild("title"));
+                        Log.d(TAG, "Sort by title");
                         break;
                     case R.id.sort_year:
                         selectedSortMethod = item.getItemId();
@@ -214,7 +228,8 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         final Spinner mGenreSpinner = (Spinner) view.findViewById(R.id.genre_spinner);
         final Spinner mLocationSpinner = (Spinner) view.findViewById(R.id.location_spinner);
 
-//        mGenreSpinner.set
+        mGenreSpinner.setSelection(genres.indexOf(mAdapter.getGenreFilter()));
+        mLocationSpinner.setSelection(locations.indexOf(mAdapter.getLocationFilter()));
 
         alertDialog.setPositiveButton("Refine", new DialogInterface.OnClickListener() {
             @Override
@@ -224,7 +239,10 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
 
                 mAdapter.setGenreFilter(genre);
                 mAdapter.setLocationFilter(location);
-//                Log.d(TAG, genre + location);
+
+                onQueryTextChange(mSearchView.getQuery().toString());           // After the data is changed, reapplies the search query
+                updateListCount();
+
                 dialog.dismiss();
             }
         });

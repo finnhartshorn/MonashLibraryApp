@@ -16,6 +16,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import finnhartshorn.monashlibrary.GenericAdapter;
 import finnhartshorn.monashlibrary.model.Book;
@@ -35,15 +37,7 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
     private ArrayList<Book> mUnfilteredBookList;
     private BookFilter mBookFilter = new BookFilter();
 
-    public enum genre {
-
-    }
-
-
-
-
-
-
+    // Stores genre and location filter, defaults to all
     private String mGenreFilter = "All";
     private String mLocationFilter = "All";
 
@@ -141,10 +135,10 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
                 final ArrayList<Book> tempFilteredBookList = new ArrayList<>();             // Temp list to hold subset of filtered list, don't want the view to update until filtering is complete
 
                 // Iterate through original book list, if title or author contains the search query, add to filtered list
-                for (Book book: mUnfilteredBookList) {
+                for (Book book : mUnfilteredBookList) {
                     if ((book.getTitle().toLowerCase().contains(filterString) || book.getAuthor().toLowerCase().contains(filterString))
-                            && (book.getGenre().contains(mGenreFilter) || mGenreFilter.equals("All"))) {
-                        switch (mLocationFilter){
+                            && (mGenreFilter.equals("All") || book.getGenre().contains(mGenreFilter))) {
+                        switch (mLocationFilter) {
                             case "All":
                                 tempFilteredBookList.add(book);
                                 break;
@@ -178,14 +172,9 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
             updateDataset((ArrayList<Book>) results.values);
         }
     }
+    public void setGenreFilter(String genreFilter) { mGenreFilter = genreFilter; }
 
-    public void setGenreFilter(String genreFilter) {
-        mGenreFilter = genreFilter;
-    }
-
-    public void setLocationFilter(String locationFilter) {
-        mLocationFilter = locationFilter;
-    }
+    public void setLocationFilter(String locationFilter) { mLocationFilter = locationFilter; }
 
     public String getGenreFilter() {
         return mGenreFilter;
@@ -195,3 +184,4 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
         return mLocationFilter;
     }
 }
+
