@@ -167,16 +167,15 @@ public class Book implements Parcelable {
         mAvailability = new Availability(availability);
     }
 
-    public boolean claytonAvailability() {
+    public boolean getClaytonAvailability() {
         return mAvailability.getClayton() == Status.Available;
     }
 
-    public boolean caulfieldAvailability() {
+    public boolean getCaulfieldAvailability() {
         return mAvailability.getCaulfield() == Status.Available;
     }
 
-    public boolean peninsulaAvailability() {
+    public boolean getPeninsulaAvailability() {
         return mAvailability.getPeninsula() == Status.Available;
     }
-
 }

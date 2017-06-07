@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -17,7 +16,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import finnhartshorn.monashlibrary.GenericAdapter;
 import finnhartshorn.monashlibrary.model.Book;
@@ -36,6 +34,18 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
 
     private ArrayList<Book> mUnfilteredBookList;
     private BookFilter mBookFilter = new BookFilter();
+
+    public enum genre {
+
+    }
+
+
+
+
+
+
+    private String mGenreFilter = "All";
+    private String mLocationFilter = "All";
 
 
     public BookSearchAdapter(Context context, ArrayList<Book> bookList) {
@@ -82,17 +92,17 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
             mISBN.setText(book.getISBN());
 
             // If the books is not available in a location, the textview is hidden
-            if (book.claytonAvailability()) {
+            if (book.getClaytonAvailability()) {
                 mClaytonAvailability.setVisibility(View.VISIBLE);
             } else {
                 mClaytonAvailability.setVisibility(View.INVISIBLE);
             }
-            if (book.caulfieldAvailability()) {
+            if (book.getCaulfieldAvailability()) {
                 mCaulfieldAvailability.setVisibility(View.VISIBLE);
             } else {
                 mCaulfieldAvailability.setVisibility(View.INVISIBLE);
             }
-            if (book.peninsulaAvailability()) {
+            if (book.getPeninsulaAvailability()) {
                 mPeninsulaAvailability.setVisibility(View.VISIBLE);
             } else {
                 mPeninsulaAvailability.setVisibility(View.INVISIBLE);
@@ -122,7 +132,7 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
             FilterResults filterResults = new FilterResults();
 
             // If there isn't a query, don't filter and just return the list
-            if (filterString == null || filterString.length() == 0){
+            if (filterString.length() == 0 && mGenreFilter.equals("All") && mLocationFilter.equals("All")) {
                 filterResults.values = mUnfilteredBookList;                    // cast to ArrayList<Book> ?
                 filterResults.count = mUnfilteredBookList.size();
             } else {
@@ -132,8 +142,29 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
 
                 // Iterate through original book list, if title or author contains the search query, add to filtered list
                 for (Book book: mUnfilteredBookList) {
-                    if (book.getTitle().toLowerCase().contains(filterString) || book.getAuthor().toLowerCase().contains(filterString)) {
-                        tempFilteredBookList.add(book);
+                    if ((book.getTitle().toLowerCase().contains(filterString) || book.getAuthor().toLowerCase().contains(filterString))
+                            && (book.getGenre().contains(mGenreFilter) || mGenreFilter.equals("All"))) {
+                        switch (mLocationFilter){
+                            case "All":
+                                tempFilteredBookList.add(book);
+                                break;
+                            case "Clayton":
+                                if (book.getClaytonAvailability()) {
+                                    tempFilteredBookList.add(book);
+                                }
+                                break;
+                            case "Caulfield":
+                                if (book.getCaulfieldAvailability()) {
+                                    tempFilteredBookList.add(book);
+                                }
+                                break;
+                            case "Peninsula":
+                                if (book.getPeninsulaAvailability()) {
+                                    tempFilteredBookList.add(book);
+                                }
+                                break;
+                        }
+//                        tempFilteredBookList.add(book);
                     }
                 }
                 filterResults.values = tempFilteredBookList;
@@ -146,5 +177,21 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
         protected void publishResults(CharSequence constraint, FilterResults results) {
             updateDataset((ArrayList<Book>) results.values);
         }
+    }
+
+    public void setGenreFilter(String genreFilter) {
+        mGenreFilter = genreFilter;
+    }
+
+    public void setLocationFilter(String locationFilter) {
+        mLocationFilter = locationFilter;
+    }
+
+    public String getGenreFilter() {
+        return mGenreFilter;
+    }
+
+    public String getLocationFilter() {
+        return mLocationFilter;
     }
 }
