@@ -21,6 +21,7 @@ public class Availability {
         mPeninsula = peninsula;
     }
 
+    // This constructor is used to make parcelling a book easier
     public Availability(HashMap<String, String> availability) {
         Log.d(TAG, "Clayton Availability: " + availability.get("Clayton"));
         mClayton = Status.valueOf(availability.get("Clayton"));

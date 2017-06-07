@@ -1,8 +1,10 @@
 package finnhartshorn.monashlibrary.books;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.ActionMenuItem;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +22,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Filter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -60,7 +64,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         mBooklist = new ArrayList<>();
-        for (DataSnapshot bookSnapShot: dataSnapshot.getChildren()) {
+        for (DataSnapshot bookSnapShot : dataSnapshot.getChildren()) {
 
             Book book = bookSnapShot.getValue(Book.class);
             mBooklist.add(book);
@@ -168,8 +172,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
                 onBackPressed();
                 return true;
             case R.id.refine_text:
-                DialogFragment newFragment = new RefineSearchDialogue();
-                newFragment.show(getSupportFragmentManager(), "Refine Search");
+                createRefineDialogue();
             default:
 //                Log.d(TAG, "ITEM CLICKED: " + item.getTitle());
 //                Log.d(TAG, "Sort Method: " + sortMethod.name());
@@ -201,6 +204,41 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         return super.onOptionsItemSelected(item);
     }
 
+    private void createRefineDialogue() {
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View view = layoutInflater.inflate(R.layout.refine_dialogue, null);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("Refine Search");
+        alertDialog.setView(view);
+
+        final Spinner mGenreSpinner = (Spinner) view.findViewById(R.id.genre_spinner);
+        final Spinner mLocationSpinner = (Spinner) view.findViewById(R.id.location_spinner);
+
+//        mGenreSpinner.set
+
+        alertDialog.setPositiveButton("Refine", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String genre = mGenreSpinner.getSelectedItem().toString();
+                String location = mLocationSpinner.getSelectedItem().toString();
+
+                mAdapter.setGenreFilter(genre);
+                mAdapter.setLocationFilter(location);
+//                Log.d(TAG, genre + location);
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        alertDialog.show();
+    }
+
     private void checkMenuItem() {
 
         Toolbar secondToolbar = (Toolbar) findViewById(R.id.search_refine_toolbar);
@@ -226,7 +264,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         // Searching is done whenever the query text changes, this just closes the keyboard when the user presses enter/submit
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         return true;
@@ -248,3 +286,4 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         mItemsFoundTextView.setText(mAdapter.getItemCount() + " items found");
     }
 }
+
