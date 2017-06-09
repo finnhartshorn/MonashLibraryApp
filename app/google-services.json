@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1046691338748-8i3atd2aaf7qgtspl3qmofmkgo847haa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "finnhartshorn.monashlibrary",
+            "certificate_hash": "24fa782211cdf39bc5c12c7892142953a36915bf"
+          }
+        },
+        {
           "client_id": "1046691338748-msdtvaco0tsj4trqtcg04ilda4m44knv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
