@@ -40,10 +40,10 @@ public class LoanViewAdapter extends BookCardAdapter {
         TextView mPeninsulaAvailability = (TextView) viewHolder.getItemView().findViewById(R.id.search_peninsula_avail_textView);
 
         String location = mLoanMap.get(book).getLocation();
-        String dueDate = mLoanMap.get(book).getDueDate();
+        String dueDate = mLoanMap.get(book).getShortDueDate();
 
         mClaytonAvailability.setText(location);
         mCaulfieldAvailability.setVisibility(View.INVISIBLE);
-        mPeninsulaAvailability.setText(dueDate);
+        mPeninsulaAvailability.setText(getContext().getString(R.string.loans_due_date, dueDate));
     }
 }

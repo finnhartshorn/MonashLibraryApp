@@ -17,6 +17,7 @@ public class Loan {
 
     private Book mBook;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-d", Locale.ENGLISH);
+    private DateFormat shortFormat = new SimpleDateFormat("dd/MM", Locale.ENGLISH);
     private Date mDueDate;
     private String mLocation;
 
@@ -42,6 +43,10 @@ public class Loan {
 
     public String getDueDate() {
         return dateFormat.format(mDueDate);
+    }
+
+    public String getShortDueDate() {
+        return shortFormat.format(mDueDate);
     }
 
     public void setDueDate(String dueDate) {
