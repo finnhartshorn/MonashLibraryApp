@@ -16,6 +16,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import finnhartshorn.monashlibrary.GenericAdapter;
 import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
@@ -23,76 +24,41 @@ import finnhartshorn.monashlibrary.R;
  * Created by Finn Hartshorn on 3/05/2017.
  */
 
-public class InnerBookAdapter extends RecyclerView.Adapter<InnerBookAdapter.BookViewHolder> {
-
-    private final Context context;    // Needed for using Glide for image fetching and caching
+public class InnerBookAdapter extends GenericAdapter<Book> implements GenericAdapter.OnViewHolderClick {
 
     private static final String TAG = "InnerBookAdapter";
-
-    protected ArrayList<Book> mBookList;
-    private BookViewHolder bookViewHolder;
 
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     private StorageReference thumbnailsReference = storageReference.child("cover-images");
 
     public InnerBookAdapter(Context context, ArrayList<Book> bookList) {
-        this.context = context;
-        mBookList = new ArrayList<>(bookList);
+        super(context, null, bookList);
+        setOnClickListener(this);
     }
 
     @Override
-    public BookViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_card_view, parent, false);
-
-        bookViewHolder = new BookViewHolder(v, this);
-
-        return bookViewHolder;
+    protected View createView(Context context, ViewGroup viewGroup, int viewType) {
+        return LayoutInflater.from(context).inflate(R.layout.book_card_view, viewGroup, false);
     }
 
     @Override
-    public void onBindViewHolder(BookViewHolder holder, int position) {
-        Log.d(TAG, "Element " + position + " set.");
-        Book mBook = mBookList.get(position);
-        StorageReference coverReference = thumbnailsReference.child(mBook.getThumbnail());          //TODO: This could fail, handle that
+    protected void bindView(Book book, GenericViewHolder viewHolder) {
+        StorageReference coverReference = thumbnailsReference.child(book.getThumbnail());
+        ImageView mCover = (ImageView) viewHolder.getItemView().findViewById(R.id.coverImageView);
 
-        Glide.with(context)        // Glide caches images, which will reduce data footprint
+        Glide.with(getContext())        // Glide caches images, which will reduce data footprint
                 .using(new FirebaseImageLoader())
                 .load(coverReference)
-                .into(holder.getCoverImageView());
+                .into(mCover);
+    }
 
-    }
-    public void updateDataset(ArrayList<Book> newBookList) {
-        mBookList = newBookList;
-        notifyDataSetChanged();
-    }
 
     @Override
-    public int getItemCount() {
-        return mBookList.size();
-    }
+    public void onClick(View view, int position) {
+        Book book = getItem(position);
+        Intent newIntent = new Intent(getContext(), BookDetailsActivity.class);
+        newIntent.putExtra("Book", book);
 
-
-    protected static class BookViewHolder extends RecyclerView.ViewHolder {
-
-        private ImageView mCoverImageView;
-        private final InnerBookAdapter innerBookAdapter;
-
-        public BookViewHolder(View itemView, InnerBookAdapter parent) {
-            super(itemView);
-            innerBookAdapter = parent;
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Book clickedBook = innerBookAdapter.mBookList.get(getAdapterPosition());
-                    Log.d(TAG, clickedBook.getTitle() + " clicked");
-                    Intent newIntent = new Intent(innerBookAdapter.context, BookDetailsActivity.class);
-                    newIntent.putExtra("Book", clickedBook);
-
-                    innerBookAdapter.context.startActivity(newIntent);
-                }
-            });
-            mCoverImageView = (ImageView) itemView.findViewById(R.id.coverImageView);
-        }
-        protected ImageView getCoverImageView() { return mCoverImageView; }
+        getContext().startActivity(newIntent);
     }
 }

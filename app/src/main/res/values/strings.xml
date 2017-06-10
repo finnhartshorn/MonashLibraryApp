@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Monash Library</string>
+    <string name="google_web_client_id">1046691338748-3k3t40a8bhal7pnukvt4oin5ov9uk4s3.apps.googleusercontent.com</string>
     <string name="action_settings">Settings</string>
 
     <string-array name="locations">
@@ -24,8 +25,8 @@
     <string name="logout_option">Logout</string>
     <string name="loans_option">Loans</string>
 
+    <string name="loans_due_date">Due %1$s</string>
 
-    <string name="google_web_client_id">1046691338748-3k3t40a8bhal7pnukvt4oin5ov9uk4s3.apps.googleusercontent.com</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
