@@ -60,7 +60,7 @@ public abstract class GenericAdapter<T> extends RecyclerView.Adapter<GenericAdap
         }
     }
 
-    public void updateDataset( List<T> nDataset) {
+    public void updateDataset(List<T> nDataset) {
         setDataset(nDataset);
         notifyDataSetChanged();
     }

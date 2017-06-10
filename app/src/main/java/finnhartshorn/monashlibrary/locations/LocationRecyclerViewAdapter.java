@@ -1,14 +1,20 @@
 package finnhartshorn.monashlibrary.locations;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import finnhartshorn.monashlibrary.GenericAdapter;
 import finnhartshorn.monashlibrary.model.Location;
 import finnhartshorn.monashlibrary.R;
 
@@ -16,77 +22,42 @@ import finnhartshorn.monashlibrary.R;
  * Created by Finn Hartshorn on 4/05/2017.
  */
 
-public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRecyclerViewAdapter.LocationViewHolder> {
+public class LocationRecyclerViewAdapter extends GenericAdapter<Location> implements GenericAdapter.OnViewHolderClick {
 
+    private static final String TAG = "LocationRVAdapter";
 
-    private ArrayList<Location> mLocationList;
-
-    public LocationRecyclerViewAdapter(ArrayList<Location> LocationList) {
-        mLocationList = new ArrayList<Location>(LocationList);
+    public LocationRecyclerViewAdapter(Context context, List<Location> dataset) {
+        super(context, null, dataset);
+        setOnClickListener(this);
     }
 
     @Override
-    public LocationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_card_view, parent, false);
-
-        LocationViewHolder LocationViewHolder = new LocationViewHolder(v);
-
-        return LocationViewHolder;
+    protected View createView(Context context, ViewGroup viewGroup, int viewType) {
+        return LayoutInflater.from(context).inflate(R.layout.location_card_view, viewGroup, false);
     }
 
     @Override
-    public void onBindViewHolder(LocationViewHolder holder, int position) {
-        Log.d("Location...Adapter", "Element " + position + " set.");
-        Location mLocation = mLocationList.get(position);
-        holder.getNameTextView().setText(mLocation.getName());
-        holder.getStreetTextView().setText(mLocation.getStreet());
-        holder.getSuburbTextView().setText(mLocation.getSuburb());
-        holder.getStateTextView().setText(mLocation.getState());
-        holder.getPostcodeCountryTextView().setText(mLocation.getPostcode() + " " + mLocation.getCountry());
+    protected void bindView(Location location, GenericViewHolder viewHolder) {
+        // Get views from location card
+        TextView nameTextView = (TextView) viewHolder.getItemView().findViewById(R.id.location_name_textview);
+        TextView streetTextView = (TextView) viewHolder.getItemView().findViewById(R.id.streetadress_textView);
+        TextView suburbTextView = (TextView) viewHolder.getItemView().findViewById(R.id.suburb_textView);
+        TextView stateTextView = (TextView) viewHolder.getItemView().findViewById(R.id.state_textView);
+        TextView postcodeCountryTextView = (TextView) viewHolder.getItemView().findViewById(R.id.postcode_country_textView);
+        ImageView imageView = (ImageView) viewHolder.getItemView().findViewById(R.id.location_imageView);
 
+        nameTextView.setText(location.getName());
+        streetTextView.setText(location.getStreet());
+        suburbTextView.setText(location.getSuburb());
+        stateTextView.setText(location.getState());
+        postcodeCountryTextView.setText(location.getPostcode() + " " + location.getCountry());
+
+        Glide.with(getContext()).load(location.getImageURL()).centerCrop().into(imageView);
     }
 
     @Override
-    public int getItemCount() {
-        return mLocationList.size();
+    public void onClick(View view, int position) {
+        Location location = getItem(position);
+        Log.d(TAG, location.getName());
     }
-
-    public static class LocationViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView mNameTextView;
-        private TextView mStreetTextView;
-        private TextView mSuburbTextView;
-        private TextView mStateTextView;
-        private TextView mPostcodeCountryTextView;
-
-        public LocationViewHolder(View itemView) {
-            super(itemView);
-            mNameTextView = (TextView) itemView.findViewById(R.id.location_name_textview);
-            mStreetTextView = (TextView) itemView.findViewById(R.id.streetadress_textView);
-            mSuburbTextView = (TextView) itemView.findViewById(R.id.suburb_textView);
-            mStateTextView = (TextView) itemView.findViewById(R.id.state_textView);
-            mPostcodeCountryTextView = (TextView) itemView.findViewById(R.id.postcode_country_textView);
-        }
-
-        public TextView getNameTextView() {
-            return mNameTextView;
-        }
-
-        public TextView getStreetTextView() {
-            return mStreetTextView;
-        }
-
-        public TextView getSuburbTextView() {
-            return mSuburbTextView;
-        }
-
-        public TextView getStateTextView() {
-            return mStateTextView;
-        }
-
-        public TextView getPostcodeCountryTextView() {
-            return mPostcodeCountryTextView;
-        }
-    }
-
 }
