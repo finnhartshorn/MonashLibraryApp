@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#002984</color>
     <!--<color name="colorAccent">#FFFFFF</color>-->
     <color name="colorAccent">#FF6E40</color>
+    <color name="colorFaded">#cccccc</color>
 </resources>
