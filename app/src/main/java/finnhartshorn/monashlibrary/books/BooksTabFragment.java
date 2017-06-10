@@ -85,6 +85,7 @@ public class BooksTabFragment extends Fragment {
 
                 for (DataSnapshot bookSnapshot: dataSnapshot.getChildren()) {
                     Book book = bookSnapshot.getValue(Book.class);
+                    book.setFirebaseId(bookSnapshot.getKey());
                     mDataset.get(0).add(book);
                 }
                 mAdapter.updateDataset(mDataset);
@@ -104,6 +105,7 @@ public class BooksTabFragment extends Fragment {
 
                 for (DataSnapshot bookSnapshot: dataSnapshot.getChildren()) {
                     Book book = bookSnapshot.getValue(Book.class);
+                    book.setFirebaseId(bookSnapshot.getKey());
                     mDataset.get(1).add(book);
                 }
                 mAdapter.updateDataset(mDataset);

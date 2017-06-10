@@ -80,7 +80,6 @@ public class OuterBookAdapter extends RecyclerView.Adapter<OuterBookAdapter.Oute
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             innerBookRecyclerView.setLayoutManager(linearLayoutManager);
-
         }
 
         public InnerBookAdapter getInnerBookAdapter() {

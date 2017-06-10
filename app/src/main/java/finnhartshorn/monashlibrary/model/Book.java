@@ -29,12 +29,13 @@ public class Book implements Parcelable {
     private String mISBN;
     private String mGenre;
     private Availability mAvailability;
+    private String mFirebaseId;
 
     public Book() {
         // This is needed for Firebase
     }
 
-    public Book(String Author, String pubDate, String thumbnail, String title, String genre, Availability availability){
+    public Book(String Author, String pubDate, String thumbnail, String title, String genre, Availability availability) {
 
         mAuthor = Author;
         mTitle = title;
@@ -177,5 +178,13 @@ public class Book implements Parcelable {
 
     public boolean getPeninsulaAvailability() {
         return mAvailability.getPeninsula() == Status.Available;
+    }
+
+    public String getFirebaseId() {
+        return mFirebaseId;
+    }
+
+    public void setFirebaseId(String mFirebaseId) {
+        this.mFirebaseId = mFirebaseId;
     }
 }

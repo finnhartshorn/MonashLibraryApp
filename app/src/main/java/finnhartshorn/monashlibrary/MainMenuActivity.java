@@ -2,8 +2,6 @@ package finnhartshorn.monashlibrary;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,10 +18,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -35,9 +32,12 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
-import com.mikepenz.iconics.IconicsDrawable;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -47,18 +47,14 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
-import com.mikepenz.materialdrawer.util.DrawerImageLoader;
-import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 
 import finnhartshorn.monashlibrary.books.BookSearchActivity;
 import finnhartshorn.monashlibrary.books.BooksTabFragment;
+import finnhartshorn.monashlibrary.books.LoanViewActivity;
 import layout.Info;
 import finnhartshorn.monashlibrary.locations.LocationsTabFragment;
 
-public class MainMenuActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener,
-        OnCompleteListener {
+public class MainMenuActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "MainActivity";
 
@@ -140,6 +136,7 @@ public class MainMenuActivity extends AppCompatActivity implements
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.google_web_client_id))
                 .requestEmail()
                 .build();
 
@@ -147,8 +144,6 @@ public class MainMenuActivity extends AppCompatActivity implements
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        mAuth.signInAnonymously().addOnCompleteListener(this);
 
         // Setup account drawer
         mAnonAccount = new ProfileDrawerItem().withName("Anonymous Account").withEmail("Anonymous Account").withIcon(R.drawable.ic_account_circle_24dp);
@@ -161,8 +156,7 @@ public class MainMenuActivity extends AppCompatActivity implements
                 .withHeaderBackground(R.color.colorPrimary)
                 .addProfiles(
                         mAnonAccount,
-                        new ProfileSettingDrawerItem().withName("Change Account").withIcon(R.drawable.ic_account_box_24dp).withIdentifier(CHANGE_PROFILE),
-                        new ProfileSettingDrawerItem().withName("Logout").withIcon(R.drawable.ic_logout_24dp).withIdentifier(SIGN_OUT)
+                        mChangeAccount
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -174,6 +168,8 @@ public class MainMenuActivity extends AppCompatActivity implements
                                     break;
                                 case SIGN_OUT:
                                     signOut();
+                                    signInAnonymously();
+                                    break;
                             }
                         }
                         return false;
@@ -182,9 +178,8 @@ public class MainMenuActivity extends AppCompatActivity implements
                 .build();
 
 
-        mLogin = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.login_option).withIcon(R.drawable.ic_account_box_24dp).withIdentifier(SIGN_IN);
-        mLoans = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.loans_option).withIcon(R.drawable.ic_loans_24dp).withIdentifier(LOANS);
-//        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.logout_option);
+        mLogin = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.login_option).withIcon(R.drawable.ic_account_box_24dp).withSelectable(false).withIdentifier(SIGN_IN);
+        mLoans = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.loans_option).withIcon(R.drawable.ic_loans_24dp).withIconTintingEnabled(true).withIdentifier(LOANS);
 
         mDrawer = new DrawerBuilder()
                 .withActivity(this)
@@ -202,39 +197,36 @@ public class MainMenuActivity extends AppCompatActivity implements
                                 signIn();
                                 break;
                             case LOANS:
-                                // TODO: Implement loans view
+                                openLoans();
+                                break;
                         }
                         return false;
                     }
                 })
                 .build();
-
-//        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
+
+    private void openLoans() {
+        Intent newIntent = new Intent(this, LoanViewActivity.class);
+//        newIntent.putExtra("Query", )
+    }
+
 
     @Override
     public void onStart() {
         super.onStart();
 
-        // Attempt to signin (will succeed if user has signed in previously
-        OptionalPendingResult<GoogleSignInResult> pendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (pendingResult.isDone()) {
-            updateAccount(pendingResult.get().getSignInAccount());
-        } else {   // If there isn't a result immediately, wait until there is
-//            showProgressIndicator();          // TODO: Progress indicator
-            pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                    updateAccount(googleSignInResult.getSignInAccount());
-                }
-            });
-        }
+//        mAuth.signOut();            // Just for testing
 
         // Check if user is signed in
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser == null) {
-            mAuth.signInAnonymously();
+            signInAnonymously();
+        } else if (currentUser.isAnonymous()) {
+            updateUI(null);
+        } else {
+            updateUI(currentUser);
         }
     }
 
@@ -271,20 +263,19 @@ public class MainMenuActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onComplete(@NonNull Task task) {
-        if (task.isSuccessful()) {
-            Log.d(TAG, "signInAnonymously:success");            // Log successful sign in
-            FirebaseUser user = mAuth.getCurrentUser();
-            updateUI(user);
-        } else {
-            Log.w(TAG, "signInAnonymously:failure", task.getException());
-            updateUI(null);
-        }
-    }
-
     private void signInAnonymously() {
-        mAuth.signInAnonymously().addOnCompleteListener(this);
+        mAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "signInAnonymously:success");            // Log successful sign in
+                    updateUI(null);
+                } else {
+                    Log.w(TAG, "signInAnonymously:failure", task.getException());
+                    updateUI(null);
+                }
+            }
+        });
     }
 
     // Signs out and then signs back in
@@ -294,6 +285,7 @@ public class MainMenuActivity extends AppCompatActivity implements
     }
 
     private void signIn() {
+        Log.d(TAG, "Signing In");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, GOOGLE_SIGNIN);
     }
@@ -303,7 +295,9 @@ public class MainMenuActivity extends AppCompatActivity implements
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        updateAccount(null);
+                        mAuth.signOut();
+                        updateUI(null);
+                        Toast.makeText(MainMenuActivity.this, "Signed Out", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -312,26 +306,47 @@ public class MainMenuActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d(TAG, "ActivityResult: " + requestCode);
-
         if (requestCode == GOOGLE_SIGNIN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                GoogleSignInAccount account = result.getSignInAccount();
-                updateAccount(account);
+                final GoogleSignInAccount account = result.getSignInAccount();
+                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+
+                OnCompleteListener<AuthResult> listener = new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = task.getResult().getUser();
+                            Toast.makeText(MainMenuActivity.this, "Signed in to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                            updateUI(user);
+                        } else {
+                            Log.d(TAG, "Fail: ", task.getException());
+                            updateUI(null);
+                        }
+                    }
+                };
+                if (mAuth.getCurrentUser() != null) {
+                    mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(this, listener);            // If a user exists, they are anonymous
+                } else {
+                    mAuth.signInWithCredential(credential).addOnCompleteListener(this, listener);                           // If the user is null, they are siwthcing accounts
+                }
             } else {
                 Log.d(TAG, "Unsuccessful Login: " + result.getStatus().getStatusMessage());
             }
         }
     }
 
-    private void updateAccount(GoogleSignInAccount account) {
+    private void updateUI(FirebaseUser account) {
         mAccountHeader.clear();             // Clear accounts and items in drawer
         mDrawer.removeAllItems();
         if (account != null) {
             Log.d(TAG, "New profile: " + account.getEmail());
-            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName(account.getDisplayName()).withEmail(account.getEmail()).withIcon(account.getPhotoUrl()).withIdentifier(100);
-            mAccountHeader.addProfiles(newProfile, mChangeAccount, mSignOut);
+            IProfile newProfile = new ProfileDrawerItem()
+                    .withNameShown(true)
+                    .withName(account.getDisplayName())
+                    .withEmail(account.getEmail())
+                    .withIdentifier(100);
+            mAccountHeader.addProfiles(newProfile, mChangeAccount);
             mDrawer.addItems(mLoans);
         } else {
             mAccountHeader.addProfiles(mAnonAccount);
@@ -339,12 +354,6 @@ public class MainMenuActivity extends AppCompatActivity implements
 
         }
 
-    }
-
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            Log.d(TAG, "signInAnonymously:success =:= " + user.getEmail());
-        }
     }
 
     @Override
@@ -386,12 +395,12 @@ public class MainMenuActivity extends AppCompatActivity implements
     }
 
     // Pager adapter is used to instantiate pages inside a ViewPager
-    class PagerAdapter extends FragmentPagerAdapter {
+    private class PagerAdapter extends FragmentPagerAdapter {
 
         String tabTitles[] = new String[] {"Books", "Locations", "Info"};
         Context context;
 
-        public PagerAdapter(FragmentManager fragmentManager, Context context){
+        PagerAdapter(FragmentManager fragmentManager, Context context){
             super(fragmentManager);
             this.context = context;
         }
@@ -401,7 +410,6 @@ public class MainMenuActivity extends AppCompatActivity implements
 
             switch (position) {
                 case 0:
-
                     return new BooksTabFragment();
                 case 1:
                     return new LocationsTabFragment();
@@ -420,7 +428,7 @@ public class MainMenuActivity extends AppCompatActivity implements
             return tabTitles[position];
         }
 
-        public View getTabView(int position) {
+        View getTabView(int position) {
             View tab = LayoutInflater.from(MainMenuActivity.this).inflate(R.layout.blank_tab, null);
             TextView textView = (TextView) tab.findViewById(R.id.testTextView);
             textView.setText(tabTitles[position]);

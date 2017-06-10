@@ -69,6 +69,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         for (DataSnapshot bookSnapShot : dataSnapshot.getChildren()) {
 
             Book book = bookSnapShot.getValue(Book.class);
+            book.setFirebaseId(bookSnapShot.getKey());
             mBooklist.add(book);
             Log.d(TAG, "Added book: " + book.getTitle());
         }
