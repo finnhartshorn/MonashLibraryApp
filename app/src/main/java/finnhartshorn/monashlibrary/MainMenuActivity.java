@@ -208,7 +208,7 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
 
     private void openLoans() {
         Intent newIntent = new Intent(this, LoanViewActivity.class);
-//        newIntent.putExtra("Query", )
+        startActivity(newIntent);
     }
 
 

@@ -2,6 +2,7 @@ package finnhartshorn.monashlibrary.books;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +28,9 @@ import finnhartshorn.monashlibrary.R;
  * Created by Finn Hartshorn on 22/05/2017.
  */
 
-public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAdapter.OnViewHolderClick, Filterable {
+public class BookSearchAdapter extends BookCardAdapter implements Filterable {
 
     private static final String TAG = "BookSearchAdapter";
-
-    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-    private StorageReference thumbnailsReference = storageReference.child("cover-images");
 
     private ArrayList<Book> mUnfilteredBookList;
     private BookFilter mBookFilter = new BookFilter();
@@ -43,8 +41,7 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
 
 
     public BookSearchAdapter(Context context, ArrayList<Book> bookList) {
-        super(context, null, bookList);
-        setOnClickListener(this);
+        super(context, bookList);
         mUnfilteredBookList = bookList;
     }
 
@@ -53,64 +50,34 @@ public class BookSearchAdapter extends GenericAdapter<Book> implements GenericAd
         super.updateDataset(nDataset);
     }
 
-    //    public void setSortMethod(SortMethod sortMethod) {}
-
-    @Override
-    protected View createView(Context context, ViewGroup viewGroup, int viewType) {
-        return LayoutInflater.from(context).inflate(R.layout.search_card_view, viewGroup, false);
-    }
-
     @Override
     protected void bindView(Book book, GenericViewHolder viewHolder) {
         if (book != null) {
-            StorageReference coverReference = thumbnailsReference.child(book.getThumbnail());
-
-            // Gets the image view and text views
-            ImageView mCover = (ImageView) viewHolder.getItemView().findViewById(R.id.searchCoverImageView);
-            TextView mTitle = (TextView) viewHolder.getItemView().findViewById(R.id.search_title_textView);
-            TextView mAuthor = (TextView) viewHolder.getItemView().findViewById(R.id.search_author_textView);
-            TextView mGenre = (TextView) viewHolder.getItemView().findViewById(R.id.search_genre_textView);
-            TextView mISBN = (TextView) viewHolder.getItemView().findViewById(R.id.search_isbn_textView);
+            super.bindView(book, viewHolder);
             TextView mClaytonAvailability = (TextView) viewHolder.getItemView().findViewById(R.id.search_clayton_avail_textView);
             TextView mCaulfieldAvailability = (TextView) viewHolder.getItemView().findViewById(R.id.search_caulfield_avail_textView);
             TextView mPeninsulaAvailability = (TextView) viewHolder.getItemView().findViewById(R.id.search_peninsula_avail_textView);
 
-            Glide.with(getContext())        // Glide caches images, which will reduce data footprint
-                    .using(new FirebaseImageLoader())
-                    .load(coverReference)
-                    .into(mCover);
+            int fadedColour = ContextCompat.getColor(getContext(), R.color.colorFaded);
+            int fullColour = ContextCompat.getColor(getContext(), R.color.colorAccent);
 
-            mTitle.setText(book.getTitle());
-            mAuthor.setText(book.getAuthor());
-            mGenre.setText(book.getGenre());
-            mISBN.setText(book.getISBN());
-
-            // If the books is not available in a location, the textview is hidden
+            // If the books is not available in a location, the textview is faded
             if (book.getClaytonAvailability()) {
-                mClaytonAvailability.setVisibility(View.VISIBLE);
+                mClaytonAvailability.setTextColor(fullColour);
             } else {
-                mClaytonAvailability.setVisibility(View.INVISIBLE);
+                mClaytonAvailability.setTextColor(fadedColour);
             }
             if (book.getCaulfieldAvailability()) {
-                mCaulfieldAvailability.setVisibility(View.VISIBLE);
+                mCaulfieldAvailability.setTextColor(fullColour);
             } else {
-                mCaulfieldAvailability.setVisibility(View.INVISIBLE);
+                mCaulfieldAvailability.setTextColor(fadedColour);
             }
             if (book.getPeninsulaAvailability()) {
-                mPeninsulaAvailability.setVisibility(View.VISIBLE);
+                mPeninsulaAvailability.setTextColor(fullColour);
             } else {
-                mPeninsulaAvailability.setVisibility(View.INVISIBLE);
+                mPeninsulaAvailability.setTextColor(fadedColour);
             }
         }
-    }
-
-    @Override
-    public void onClick(View view, int position) {
-        Book book = getItem(position);
-        Intent newIntent = new Intent(getContext(), BookDetailsActivity.class);
-        newIntent.putExtra("Book", book);
-
-        getContext().startActivity(newIntent);
     }
 
     @Override

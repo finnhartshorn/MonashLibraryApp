@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Filter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -76,14 +77,15 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         mAdapter.updateBooklist(mBooklist);
         try {                   // TODO: Maybe change this?
             onQueryTextChange(mSearchView.getQuery().toString());           // After the data is changed, reapplies the search query
-        } catch (NullPointerException e) {                                  // The search bar isn't created when this first runs,
-            updateListCount();
+        } catch (NullPointerException e) {                                  // The search bar isn't created when this first runs, so this catches that
         }
+        updateListCount();
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.w(TAG, "Failed loading books", databaseError.toException());
+        Toast.makeText(this, "Error loading books from database", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -95,14 +97,6 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         Toolbar tb = (Toolbar) findViewById(R.id.search_toolbar);
         setSupportActionBar(tb);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Get ref to items count text view
-        mItemsFoundTextView = (TextView) findViewById(R.id.items_found);
-
-        // Get reference to firebase database and set default query
-        mRootRef = FirebaseDatabase.getInstance().getReference();
-        mBookQuery = mRootRef.child("books");
-        mBookQuery.addValueEventListener(this);
 
         // Get and configure recycler view
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.book_search_recycler_view);
@@ -117,8 +111,17 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        // Setup arrays of filter options
         genres = Arrays.asList(getResources().getStringArray(R.array.genres));
         locations = Arrays.asList(getResources().getStringArray(R.array.locations));
+
+        // Get ref to items count text view
+        mItemsFoundTextView = (TextView) findViewById(R.id.items_found);
+
+        // Get reference to firebase database and set default query
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        mBookQuery = mRootRef.child("books");
+        mBookQuery.addValueEventListener(this);
     }
 
 
