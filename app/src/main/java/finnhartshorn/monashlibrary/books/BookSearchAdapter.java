@@ -125,7 +125,6 @@ public class BookSearchAdapter extends BookCardAdapter implements Filterable {
                                 }
                                 break;
                         }
-//                        tempFilteredBookList.add(book);
                     }
                 }
                 filterResults.values = tempFilteredBookList;

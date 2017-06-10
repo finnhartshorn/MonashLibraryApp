@@ -17,6 +17,8 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 import finnhartshorn.monashlibrary.GenericAdapter;
+import finnhartshorn.monashlibrary.GenericBookAdapter;
+import finnhartshorn.monashlibrary.books.range.BookRange;
 import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
@@ -24,7 +26,7 @@ import finnhartshorn.monashlibrary.R;
  * Created by Finn Hartshorn on 3/05/2017.
  */
 
-public class InnerBookAdapter extends GenericAdapter<Book> implements GenericAdapter.OnViewHolderClick {
+public class InnerBookAdapter extends GenericBookAdapter {
 
     private static final String TAG = "InnerBookAdapter";
 
@@ -32,8 +34,7 @@ public class InnerBookAdapter extends GenericAdapter<Book> implements GenericAda
     private StorageReference thumbnailsReference = storageReference.child("cover-images");
 
     public InnerBookAdapter(Context context, ArrayList<Book> bookList) {
-        super(context, null, bookList);
-        setOnClickListener(this);
+        super(context, bookList);
     }
 
     @Override
@@ -50,15 +51,5 @@ public class InnerBookAdapter extends GenericAdapter<Book> implements GenericAda
                 .using(new FirebaseImageLoader())
                 .load(coverReference)
                 .into(mCover);
-    }
-
-
-    @Override
-    public void onClick(View view, int position) {
-        Book book = getItem(position);
-        Intent newIntent = new Intent(getContext(), BookDetailsActivity.class);
-        newIntent.putExtra("Book", book);
-
-        getContext().startActivity(newIntent);
     }
 }

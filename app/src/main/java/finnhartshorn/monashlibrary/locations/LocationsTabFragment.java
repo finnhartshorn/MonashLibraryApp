@@ -37,7 +37,7 @@ public class LocationsTabFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.books_recycler_view);
         recyclerView.setHasFixedSize(true);
         initDataset();
-        LocationRecyclerViewAdapter locationAdapter = new LocationRecyclerViewAdapter(mLocationList);
+        LocationRecyclerViewAdapter locationAdapter = new LocationRecyclerViewAdapter(getContext(), mLocationList);
         recyclerView.setAdapter(locationAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -47,9 +47,9 @@ public class LocationsTabFragment extends Fragment {
     }
 
     private void initDataset() {
-        mLocationList = new ArrayList<Location>();
-        mLocationList.add(new Location("Clayton", "13 College Walk Monash University", "Clayton", "VIC", "3168", "Australia"));
-        mLocationList.add(new Location("Caulfield", "900 Dandenong Road", "Caulfield East", "VIC", "3145", "Australia"));
-        mLocationList.add(new Location("Peninsula", "Building L McMahons Road", "Frankston", "VIC", "3199", "Australia"));
+        mLocationList = new ArrayList<>();
+        mLocationList.add(new Location("Clayton", "13 College Walk Monash University", "Clayton", "VIC", "3168", "Australia", "https://www.monash.edu/__data/assets/image/0003/157764/banner-title-hal.jpg"));
+        mLocationList.add(new Location("Caulfield", "900 Dandenong Road", "Caulfield East", "VIC", "3145", "Australia", "https://www.monash.edu/__data/assets/image/0006/918249/caulfield-B.jpg"));
+        mLocationList.add(new Location("Peninsula", "Building L McMahons Road", "Frankston", "VIC", "3199", "Australia", "https://www.monash.edu/__data/assets/image/0003/918192/Peninsula-Library-B.jpg"));
     }
 }
