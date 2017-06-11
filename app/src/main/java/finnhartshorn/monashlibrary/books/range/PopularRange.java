@@ -12,6 +12,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class PopularRange extends BookRange {
     public PopularRange(Context context, OnBookDataChanged changeListener, OnBookDataCancelled cancelListener) {
         super(context, "Popular Books", FirebaseDatabase.getInstance().getReference().child("books"), changeListener, cancelListener);
-        setmOrderByChild("title");
+        setOrderByChild("title");
     }
 }

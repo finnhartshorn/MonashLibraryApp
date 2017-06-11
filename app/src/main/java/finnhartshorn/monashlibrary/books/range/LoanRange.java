@@ -31,8 +31,9 @@ public class LoanRange extends BookRange {
             Book book = loanSnapShot.child("book").getValue(Book.class);
             mBooklist.add(book);
         }
-
-        mChangeListener.onDataChange(mBooklist);
+        if (mChangeListener != null) {
+            mChangeListener.onDataChange(mBooklist);
+        }
     }
 
     @Override

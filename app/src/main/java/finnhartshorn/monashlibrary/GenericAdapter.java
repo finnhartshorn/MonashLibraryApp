@@ -60,9 +60,18 @@ public abstract class GenericAdapter<T> extends RecyclerView.Adapter<GenericAdap
         }
     }
 
+    // Using notifyDatasetChanged does not allow for animations, so this function
+    // figures out what's been added, changed or removed based on the size of the old and new list
     public void updateDataset(List<T> nDataset) {
+        int oldSize = mDataset.size();
+        int newSize = nDataset.size();
         setDataset(nDataset);
-        notifyDataSetChanged();
+        if (newSize >= oldSize) {
+            notifyItemRangeChanged(0, oldSize-1);
+            notifyItemRangeInserted(oldSize, newSize-oldSize);
+        } else {
+            notifyItemRangeRemoved(newSize, oldSize-newSize);
+        }
     }
 
 

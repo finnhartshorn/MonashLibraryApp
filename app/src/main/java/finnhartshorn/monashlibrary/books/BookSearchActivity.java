@@ -121,28 +121,38 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
 
         // Checks if there are any search directives from the intent
         Intent intent = getIntent();
-        String queryString = null;
 
-        queryString = intent.getStringExtra("Query");
+        String queryString = intent.getStringExtra("Query");
         if (queryString != null) {
             Log.d(TAG, queryString);
             mBookQuery = FirebaseDatabase.getInstance().getReferenceFromUrl(queryString);
             String order = intent.getStringExtra("Order");
             if (order != null) {
                 mBookQuery = mBookQuery.orderByChild(order);
+                switch(order) {
+                    case "title":
+                        selectedSortMethod = R.id.sort_title;
+                        break;
+                    case "author":
+                        selectedSortMethod = R.id.sort_author;
+                        break;
+                    case "publicationDate":
+                        selectedSortMethod = R.id.sort_year;
+                        break;
+                }
             }
         } else {
             // Get reference to firebase database and set default query
-            mRootRef = FirebaseDatabase.getInstance().getReference();
             mBookQuery = mRootRef.child("books");
         }
         mBookQuery.addValueEventListener(this);
+        mRootRef = FirebaseDatabase.getInstance().getReference();
     }
 
     private void setSortQuery(Query query) {                    // Changes the firebase query and refreshes the recyclerview and count
-        query.removeEventListener(this);
+        mBookQuery.removeEventListener(this);
         mBookQuery = query;
-        query.addValueEventListener(this);
+        mBookQuery.addValueEventListener(this);
     }
 
 
@@ -215,7 +225,6 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
                     case R.id.sort_title:
                         selectedSortMethod = item.getItemId();
                         setSortQuery(mRootRef.child("books").orderByChild("title"));
-                        Log.d(TAG, "Sort by title");
                         break;
                     case R.id.sort_year:
                         selectedSortMethod = item.getItemId();

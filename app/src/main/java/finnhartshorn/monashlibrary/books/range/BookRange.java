@@ -112,7 +112,7 @@ public abstract class BookRange implements ValueEventListener, View.OnClickListe
         return mOrderByChild;
     }
 
-    public void setmOrderByChild(String OrderByChild) {
+    public void setOrderByChild(String OrderByChild) {
         mOrderByChild = OrderByChild;
         mBookQuery.removeEventListener(this);
         mBookQuery.orderByChild(mOrderByChild).limitToFirst(10).addValueEventListener(this);

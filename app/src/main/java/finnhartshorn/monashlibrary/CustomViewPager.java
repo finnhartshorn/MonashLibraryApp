@@ -10,7 +10,7 @@ import android.view.MotionEvent;
  */
 
 public class CustomViewPager extends ViewPager {
-    // A custom ViewPager used to override functions providing swipe functionality
+    // A custom ViewPager used to override functions providing swipe, this means the tabs must be used to switch between them
 
     public CustomViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);

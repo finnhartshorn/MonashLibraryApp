@@ -15,6 +15,8 @@ import finnhartshorn.monashlibrary.GenericAdapter;
 import finnhartshorn.monashlibrary.books.range.BookRange;
 import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
 /**
  * Created by Finn Hartshorn on 7/05/2017.
@@ -43,6 +45,8 @@ public class OuterBookAdapter extends GenericAdapter<BookRange> {
         moreTextView.setOnClickListener(bookRange);
 
         RecyclerView innerRecyclerView = (RecyclerView) viewHolder.getItemView().findViewById(R.id.outer_RecyclerView);
+        innerRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        innerRecyclerView.getItemAnimator().setAddDuration(1000);
 
         InnerBookAdapter innerBookAdapter = new InnerBookAdapter(getContext(), new ArrayList<Book>());
         innerRecyclerView.setAdapter(innerBookAdapter);

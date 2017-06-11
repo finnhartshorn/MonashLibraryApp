@@ -16,6 +16,10 @@
         <item>Non-fiction</item>
         <item>Fantasy</item>
         <item>Dystopian</item>
+        <item>Crime</item>
+        <item>Thriller</item>
+        <item>Romance</item>
+        <item>Mystery</item>
     </string-array>
 
     <string name="drawer_open">Open</string>
