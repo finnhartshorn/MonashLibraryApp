@@ -13,9 +13,15 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Locale;
+
 import finnhartshorn.monashlibrary.model.Availability;
 import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
+
+/**
+ * Shows a more detailed view of a book
+ */
 
 public class BookDetailsActivity extends AppCompatActivity {
 
@@ -30,7 +36,6 @@ public class BookDetailsActivity extends AppCompatActivity {
     private TextView caulfieldTextView;
     private TextView peninsulaTextView;
     private ImageView coverImageView;
-//    private TextView TextView;
 
     private StorageReference thumbnailsReference = FirebaseStorage.getInstance().getReference().child("cover-images");
 
@@ -53,14 +58,15 @@ public class BookDetailsActivity extends AppCompatActivity {
         // And imageView
         coverImageView = (ImageView) findViewById(R.id.book_cover_imageView);
 
+        // Gets the book sent via intent
         Intent intent = getIntent();
         displayBook = intent.getParcelableExtra("Book");
-
+        // And displays it
         titleTextView.setText(displayBook.getTitle());
         authorTextView.setText(displayBook.getAuthor());
         genreTextView.setText(displayBook.getGenre());
         ISBNTextView.setText(displayBook.getISBN());
-        yearTextView.setText(Integer.toString(displayBook.getPublicationYear()));
+        yearTextView.setText(String.format(Locale.ENGLISH, "%d", displayBook.getPublicationYear()));
         Availability availability = displayBook.getAvailability();
         claytonTextView.setText(availability.getClayton().name());
         caulfieldTextView.setText(availability.getCaulfield().name());
@@ -69,7 +75,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         StorageReference coverReference = thumbnailsReference.child(displayBook.getThumbnail());
 
-        Glide.with(this)        // Glide caches images, which will reduce data footprint
+        Glide.with(this)        // Glide is used to laod images
                 .using(new FirebaseImageLoader())
                 .load(coverReference)
                 .into(coverImageView);
@@ -82,7 +88,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home:                             // Multiple different activies can lead to this one the back arrow goes back rather than up
                 onBackPressed();
                 return true;
         }

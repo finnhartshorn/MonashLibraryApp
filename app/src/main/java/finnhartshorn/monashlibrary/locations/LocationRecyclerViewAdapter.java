@@ -18,6 +18,8 @@ import finnhartshorn.monashlibrary.R;
 
 /**
  * Created by Finn Hartshorn on 4/05/2017.
+ *
+ * Adapter for the location recycler view
  */
 
 public class LocationRecyclerViewAdapter extends GenericAdapter<LibraryLocation> implements GenericAdapter.OnViewHolderClick {

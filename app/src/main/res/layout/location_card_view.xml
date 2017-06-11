@@ -36,9 +36,10 @@
                 android:id="@+id/location_imageView"
                 android:minHeight="90dp"
                 android:minWidth="135dp"
+                android:maxHeight="90dp"
+                android:maxWidth="135dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
                 app:srcCompat="@color/cardview_dark_background" />
 
             <LinearLayout

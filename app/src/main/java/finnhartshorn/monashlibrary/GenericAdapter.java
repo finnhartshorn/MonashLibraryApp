@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Finn Hartshorn on 22/05/2017.
  */
 
-// Based on https://gist.github.com/Plumillon/f85c6be94e2fdaf339b9 -- Apache license
+// Based on https://gist.github.com/Plumillon/f85c6be94e2fdaf339b9
 
 // This is a generic Recycler view adapter and view holder, functions as a base class for all recycler views in the app
 

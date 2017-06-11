@@ -1,9 +1,6 @@
 package finnhartshorn.monashlibrary.books;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +13,22 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.GenericAdapter;
 import finnhartshorn.monashlibrary.GenericBookAdapter;
-import finnhartshorn.monashlibrary.books.range.BookRange;
 import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
 /**
  * Created by Finn Hartshorn on 3/05/2017.
+ *
+ * Handles the horizontal book recycler view
+ * Very simple class as most of the functionality is handles in its superclasses
  */
 
 public class InnerBookAdapter extends GenericBookAdapter {
 
     private static final String TAG = "InnerBookAdapter";
 
+    // Storage references
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     private StorageReference thumbnailsReference = storageReference.child("cover-images");
 

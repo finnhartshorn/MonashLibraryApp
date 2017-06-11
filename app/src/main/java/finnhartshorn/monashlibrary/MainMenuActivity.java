@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +28,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,7 +35,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -53,7 +50,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import finnhartshorn.monashlibrary.books.BookSearchActivity;
 import finnhartshorn.monashlibrary.books.BooksTabFragment;
 import finnhartshorn.monashlibrary.books.LoanViewActivity;
-import layout.Info;
 import finnhartshorn.monashlibrary.locations.LocationsTabFragment;
 
 public class MainMenuActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -73,31 +69,26 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
     //Store Google signin api
     GoogleApiClient mGoogleApiClient;
 
-
     // Store drawer and drawer account header, allowing this to be changed when the current account changes
     private AccountHeader mAccountHeader;
     private IProfile mAnonAccount;
     private IProfile mChangeAccount;
-    private IProfile mSignOut;
+//    private IProfile mSignOut;
 
     private Drawer mDrawer;
     PrimaryDrawerItem mLogin;
     PrimaryDrawerItem mLoans;
-//    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-//    private DatabaseReference mThumbnailRef = mRootRef.child("thumbnails");
 
     BooksTabFragment bookFragment;
 
     private ProgressDialog mProgressDialog;
 
-//    private DatabaseReference mDatabase;
-
     private ViewPager mViewPager;
 
     // Stores a reference to menu so the search icon can be hidden when not in the books tab
-    private Menu menu;
+    private Menu menu = null;
 
-    // Book fragment
+    // Book fragment is stored so it can be updated if the logged in user changes
     private BooksTabFragment mBookTabFragment;
 
     @Override
@@ -162,7 +153,6 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
         // Setup account drawer
         mAnonAccount = new ProfileDrawerItem().withName("Anonymous Account").withEmail("Anonymous Account").withIcon(R.drawable.ic_account_circle_24dp);
         mChangeAccount = new ProfileSettingDrawerItem().withName("Change Account").withIcon(R.drawable.ic_account_box_24dp).withIdentifier(CHANGE_PROFILE);
-        mSignOut = new ProfileSettingDrawerItem().withName("Logout").withIcon(R.drawable.ic_logout_24dp).withIdentifier(SIGN_OUT);
 
 
         mAccountHeader = new AccountHeaderBuilder()
@@ -179,10 +169,6 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
                             switch ((int) profile.getIdentifier()) {
                                 case CHANGE_PROFILE:
                                     changeAccount();
-                                    break;
-                                case SIGN_OUT:
-                                    signOut();
-                                    signInAnonymously();
                                     break;
                             }
                         }
@@ -254,29 +240,27 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void setSearchVisibility(boolean visibility) {
-        MenuItem search = menu.findItem(R.id.action_search);
-        search.setVisible(visibility);
+        if (menu != null) {
+            MenuItem search = menu.findItem(R.id.action_search);
+            search.setVisible(visibility);
+        }
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             Log.d(TAG, "Search attempted");
             Intent searchIntent = new Intent(this, BookSearchActivity.class);
             startActivity(searchIntent);
-        } else if (id == R.id.action_settings) {
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    // Users are signed in anonymously the first time they use the app, if they sign up later their new and anonymous accounts are linked together.
     private void signInAnonymously() {
         mAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -316,6 +300,7 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
                 });
     }
 
+    // Handles result of google signin activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -346,7 +331,7 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
                 if (mAuth.getCurrentUser() != null) {
                     mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(this, listener);            // If a user exists, they are anonymous
                 } else {
-                    mAuth.signInWithCredential(credential).addOnCompleteListener(this, listener);                           // If the user is null, they are siwthcing accounts
+                    mAuth.signInWithCredential(credential).addOnCompleteListener(this, listener);                           // If the user is null, they are switching accounts
                 }
             } else {
                 Log.d(TAG, "Unsuccessful Login: " + result.getStatus().getStatusMessage());
@@ -386,30 +371,11 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
     }
 
 
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
         }
     }
 

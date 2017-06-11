@@ -15,6 +15,7 @@ import finnhartshorn.monashlibrary.model.Book;
  * Created by Finn Hartshorn on 11/06/2017.
  */
 
+// Slightly less abstract than GenericAdapter, is used as a superclass for all adapters that deal with BookRanges
 public abstract class GenericBookAdapter extends GenericAdapter<Book> implements GenericAdapter.OnViewHolderClick, BookRange.OnBookDataChanged {
 
 

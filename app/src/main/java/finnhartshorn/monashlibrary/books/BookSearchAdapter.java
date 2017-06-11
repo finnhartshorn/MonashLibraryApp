@@ -1,26 +1,13 @@
 package finnhartshorn.monashlibrary.books;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import finnhartshorn.monashlibrary.GenericAdapter;
 import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
@@ -28,6 +15,7 @@ import finnhartshorn.monashlibrary.R;
  * Created by Finn Hartshorn on 22/05/2017.
  */
 
+// The book search adapter handles the searching and filtering
 public class BookSearchAdapter extends BookCardAdapter implements Filterable {
 
     private static final String TAG = "BookSearchAdapter";
@@ -92,9 +80,9 @@ public class BookSearchAdapter extends BookCardAdapter implements Filterable {
             String filterString = constraint.toString().toLowerCase();
             FilterResults filterResults = new FilterResults();
 
-            // If there isn't a query, don't filter and just return the list
+            // If there isn't a query or filter just return the list
             if (filterString.length() == 0 && mGenreFilter.equals("All") && mLocationFilter.equals("All")) {
-                filterResults.values = mUnfilteredBookList;                    // cast to ArrayList<Book> ?
+                filterResults.values = mUnfilteredBookList;
                 filterResults.count = mUnfilteredBookList.size();
             } else {
 //                final ArrayList<Book> unfilteredList = (ArrayList<Book>) getDataset();
@@ -103,7 +91,7 @@ public class BookSearchAdapter extends BookCardAdapter implements Filterable {
 
                 // Iterate through original book list, if title or author contains the search query, add to filtered list
                 for (Book book : mUnfilteredBookList) {
-                    if ((book.getTitle().toLowerCase().contains(filterString) || book.getAuthor().toLowerCase().contains(filterString))
+                    if ((book.getTitle().toLowerCase().contains(filterString) || book.getAuthor().toLowerCase().contains(filterString))         // Searches both title and author
                             && (mGenreFilter.equals("All") || book.getGenre().contains(mGenreFilter))) {
                         switch (mLocationFilter) {
                             case "All":

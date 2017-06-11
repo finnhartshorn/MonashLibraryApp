@@ -61,7 +61,7 @@ public class LoanViewActivity extends AppCompatActivity implements ValueEventLis
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        // Get reference to firebase authentication, needs the
+        // Get reference to firebase authentication
         mAuth = FirebaseAuth.getInstance();
 
         // Get reference to firebase database and set default query
@@ -72,7 +72,7 @@ public class LoanViewActivity extends AppCompatActivity implements ValueEventLis
     }
 
     @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
+    public void onDataChange(DataSnapshot dataSnapshot) {               // Updates the loan view if the loan data changes
         mBooklist = new ArrayList<>();
         for (DataSnapshot loanSnapShot : dataSnapshot.getChildren()) {
 

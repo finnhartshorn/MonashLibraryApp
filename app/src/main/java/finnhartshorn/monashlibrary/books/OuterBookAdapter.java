@@ -20,7 +20,7 @@ import finnhartshorn.monashlibrary.R;
  * Created by Finn Hartshorn on 7/05/2017.
  */
 
-// This book adapter handles the recycler view that contains cards of books, each card contains another recycler view containing the individual books
+// This book adapter handles the recycler view that contains ranges of books, each card contains another recycler view containing the individual books
 public class OuterBookAdapter extends GenericAdapter<BookRange> {
     private static final String TAG = "OuterBookAdapter";
 
@@ -38,6 +38,9 @@ public class OuterBookAdapter extends GenericAdapter<BookRange> {
     protected void bindView(BookRange bookRange, GenericViewHolder viewHolder) {
         TextView titleTextView = (TextView) viewHolder.getItemView().findViewById(R.id.book_range_title);
         titleTextView.setText(bookRange.getTitle());
+
+        TextView moreTextView = (TextView) viewHolder.getItemView().findViewById(R.id.view_more);
+        moreTextView.setOnClickListener(bookRange);
 
         RecyclerView innerRecyclerView = (RecyclerView) viewHolder.getItemView().findViewById(R.id.outer_RecyclerView);
 

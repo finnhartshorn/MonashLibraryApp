@@ -14,6 +14,8 @@ import finnhartshorn.monashlibrary.model.Loan;
 
 /**
  * Created by Finn Hartshorn on 3/05/2017.
+ *
+ * This adapter handles the loan recycler view
  */
 
 public class LoanViewAdapter extends BookCardAdapter {
@@ -42,6 +44,7 @@ public class LoanViewAdapter extends BookCardAdapter {
         String location = mLoanMap.get(book).getLocation();
         String dueDate = mLoanMap.get(book).getShortDueDate();
 
+        // This is a bit messy as it uses the same card as the search view
         mClaytonAvailability.setText(location);
         mCaulfieldAvailability.setVisibility(View.INVISIBLE);
         mPeninsulaAvailability.setText(getContext().getString(R.string.loans_due_date, dueDate));

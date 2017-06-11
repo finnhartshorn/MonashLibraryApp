@@ -12,12 +12,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -25,15 +20,13 @@ import finnhartshorn.monashlibrary.books.range.BookRange;
 import finnhartshorn.monashlibrary.books.range.LoanRange;
 import finnhartshorn.monashlibrary.books.range.PopularRange;
 import finnhartshorn.monashlibrary.books.range.RecentRange;
-import finnhartshorn.monashlibrary.model.Book;
 import finnhartshorn.monashlibrary.R;
 
 public class BooksTabFragment extends Fragment implements BookRange.OnBookDataCancelled {
 
     private static final String TAG = "BooksTabFragment";
 
-    // Recycler view references
-    private RecyclerView mRecyclerView;
+    // Adapter references
     private OuterBookAdapter mAdapter;
 
     ArrayList<BookRange> mDataset = new ArrayList<>();
@@ -63,13 +56,13 @@ public class BooksTabFragment extends Fragment implements BookRange.OnBookDataCa
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mDataset = new ArrayList<>();
-        mDataset.add(new RecentRange(null, this));
-        mDataset.add(new PopularRange(null, this));
+        mDataset = new ArrayList<>();                                           // The outer recycler view takes an array of BookRanges, each stores a query that returns multiple books
+        mDataset.add(new RecentRange(getContext(), null, this));
+        mDataset.add(new PopularRange(getContext(), null, this));
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (currentUser != null && !currentUser.isAnonymous()) {
-            mDataset.add(new LoanRange(null, this));
+        if (currentUser != null && !currentUser.isAnonymous()) {                // Only displays loans if the user is logged in with a proper account
+            mDataset.add(new LoanRange(getContext(), null, this));
         }
 
         // Get and configure recycler view
@@ -93,12 +86,12 @@ public class BooksTabFragment extends Fragment implements BookRange.OnBookDataCa
 
     public void addLoanRange() {
         Log.d(TAG, "Added loan");
-        for (int i = 0; i < mDataset.size(); i++) {
+        for (int i = 0; i < mDataset.size(); i++) {                     // If the user changes accounts, the previous loan display is taken down and a new one is created
             if (mDataset.get(i).getTitle().equals("Your Loans")) {
                 mDataset.remove(i);
             }
         }
-        mDataset.add(new LoanRange(null, this));
+        mDataset.add(new LoanRange(getContext(), null, this));                        // Otherwise it just creates
         mAdapter.updateDataset(mDataset);
         for (BookRange bookRange: mDataset) {
             bookRange.refreshData();

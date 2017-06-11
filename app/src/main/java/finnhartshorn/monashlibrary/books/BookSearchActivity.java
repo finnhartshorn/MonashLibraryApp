@@ -2,6 +2,7 @@ package finnhartshorn.monashlibrary.books;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +44,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
     private RecyclerView mRecyclerView;
     private BookSearchAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
-    // Items found textview reference
+    // Displays number of items found
     private TextView mItemsFoundTextView;
 
     // A reference to the search view
@@ -75,9 +76,9 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
             Log.d(TAG, "Added book: " + book.getTitle());
         }
         mAdapter.updateBooklist(mBooklist);
-        try {                   // TODO: Maybe change this?
+        try {
             onQueryTextChange(mSearchView.getQuery().toString());           // After the data is changed, reapplies the search query
-        } catch (NullPointerException e) {                                  // The search bar isn't created when this first runs, so this catches that
+        } catch (NullPointerException e) {                                  // The search bar isn't created when this first runs, so this is a workaround
         }
         updateListCount();
     }
@@ -118,20 +119,30 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         // Get ref to items count text view
         mItemsFoundTextView = (TextView) findViewById(R.id.items_found);
 
-        // Get reference to firebase database and set default query
-        mRootRef = FirebaseDatabase.getInstance().getReference();
-        mBookQuery = mRootRef.child("books");
+        // Checks if there are any search directives from the intent
+        Intent intent = getIntent();
+        String queryString = null;
+
+        queryString = intent.getStringExtra("Query");
+        if (queryString != null) {
+            Log.d(TAG, queryString);
+            mBookQuery = FirebaseDatabase.getInstance().getReferenceFromUrl(queryString);
+            String order = intent.getStringExtra("Order");
+            if (order != null) {
+                mBookQuery = mBookQuery.orderByChild(order);
+            }
+        } else {
+            // Get reference to firebase database and set default query
+            mRootRef = FirebaseDatabase.getInstance().getReference();
+            mBookQuery = mRootRef.child("books");
+        }
         mBookQuery.addValueEventListener(this);
     }
-
-
 
     private void setSortQuery(Query query) {                    // Changes the firebase query and refreshes the recyclerview and count
         query.removeEventListener(this);
         mBookQuery = query;
         query.addValueEventListener(this);
-//        mAdapter.updateDataset(mBooklist);
-//        onQueryTextChange(mSearchView.getQuery().toString());           // After the data is changed, reapplies the search query
     }
 
 
@@ -151,7 +162,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         final Menu secondMenu = secondToolbar.getMenu();
 
         menuInfalter.inflate(R.menu.search_refine_menu, secondMenu);
-        // For each menu item in the second toolbar add an on click listener that passes the click the same method that handles items for the first toolbar
+        // For each menu item in the second toolbar add an on click listener that passes the click to the same method that handles items for the first toolbar
         // If the menu item has a submenu, add listeners to each item in the submenu
         for (int i = 0; i < secondMenu.size(); i++) {
             secondMenu.getItem(i).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -186,12 +197,11 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
                 return true;
             case R.id.refine_text:
                 createRefineDialogue();
+                break;
             default:
-//                Log.d(TAG, "ITEM CLICKED: " + item.getTitle());
-//                Log.d(TAG, "Sort Method: " + sortMethod.name());
                 break;
         }
-        if (item.getGroupId() == R.id.sort_group) {
+        if (item.getGroupId() == R.id.sort_group) {                             // Handles clicks within the sort menu
             if (!item.isChecked()) {
                 switch (item.getItemId()) {
                     case R.id.sort_added:
@@ -218,7 +228,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
         return super.onOptionsItemSelected(item);
     }
 
-    private void createRefineDialogue() {
+    private void createRefineDialogue() {                               // Creates a dialogue with two spinners to restrict the books location and genre
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View view = layoutInflater.inflate(R.layout.refine_dialogue, null);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -301,7 +311,7 @@ public class BookSearchActivity extends AppCompatActivity implements SearchView.
     }
 
     private void updateListCount() {
-        mItemsFoundTextView.setText(mAdapter.getItemCount() + " items found");
+        mItemsFoundTextView.setText(getString(R.string.num_books_found, mAdapter.getItemCount()));
     }
 }
 

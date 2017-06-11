@@ -3,12 +3,9 @@ package finnhartshorn.monashlibrary.locations;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,6 +21,8 @@ import java.util.Locale;
 
 import finnhartshorn.monashlibrary.R;
 import finnhartshorn.monashlibrary.model.LibraryLocation;
+
+// A relatively simple map view used to show teh location of the three libraries and to link to google maps if users need directions
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
@@ -42,7 +41,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -61,23 +61,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Marks locations from the LibraryLocation class
         mMap.addMarker(new MarkerOptions().position(LibraryLocation.CLAYTON_HAL).title("Clayton Library"));
         mMap.addMarker(new MarkerOptions().position(LibraryLocation.CAULFIELD).title("Caulfield Library"));
         mMap.addMarker(new MarkerOptions().position(LibraryLocation.PENINSULA).title("Peninsula Library"));
 
+        // The camera begins centred on the chosen location
         switch(mLibraryLocation.getName()) {
             case "Clayton Library":
                 mLatLng = LibraryLocation.CLAYTON_HAL;

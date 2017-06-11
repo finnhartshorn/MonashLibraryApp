@@ -14,6 +14,7 @@ import finnhartshorn.monashlibrary.model.LibraryLocation;
 import finnhartshorn.monashlibrary.R;
 
 
+// Shows locations and links to a Google map view
 public class LocationsTabFragment extends Fragment {
 
     private ArrayList<LibraryLocation> mLibraryLocationList;

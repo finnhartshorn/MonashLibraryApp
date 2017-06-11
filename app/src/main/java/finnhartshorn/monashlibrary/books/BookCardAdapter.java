@@ -22,9 +22,10 @@ import finnhartshorn.monashlibrary.model.Book;
 
 /**
  * Created by Finn Hartshorn on 11/06/2017.
+ *
+ * Both the search and loan view use the same card layout so this class holds common functionality between the two adapters
  */
 
-// Both the search and loan view use the same card layout so this class holds common functionality between the two adapters
 public abstract class BookCardAdapter extends GenericAdapter<Book> implements GenericAdapter.OnViewHolderClick {
 
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -65,6 +66,7 @@ public abstract class BookCardAdapter extends GenericAdapter<Book> implements Ge
             mAuthor.setText(book.getAuthor());
             mGenre.setText(book.getGenre());
             mISBN.setText(book.getISBN());
+            // Availability is handled differently by loan and search, so displaying availabiltiy is handled in those subclasses
         }
     }
 

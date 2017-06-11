@@ -24,8 +24,11 @@
     <string name="login_option">Login</string>
     <string name="logout_option">Logout</string>
     <string name="loans_option">Loans</string>
-
     <string name="loans_due_date">Due %1$s</string>
+
+    <string name="num_books_found">%1$d items found</string>
+
+
 
 
     <!-- TODO: Remove or change this placeholder text -->
