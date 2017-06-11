@@ -1,5 +1,6 @@
 package finnhartshorn.monashlibrary;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +86,9 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
 //    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 //    private DatabaseReference mThumbnailRef = mRootRef.child("thumbnails");
 
+    BooksTabFragment bookFragment;
+
+    private ProgressDialog mProgressDialog;
 
 //    private DatabaseReference mDatabase;
 
@@ -92,6 +97,9 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
     // Stores a reference to menu so the search icon can be hidden when not in the books tab
     private Menu menu;
 
+    // Book fragment
+    private BooksTabFragment mBookTabFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +107,12 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Set up progress dialog
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle("Logging In");
+        mProgressDialog.setMessage("Please Wait");
+        mProgressDialog.setCancelable(false);
 
         // Set up the ViewPager with the sections adapter.
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
@@ -306,6 +320,8 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        mProgressDialog.show();
+
         if (requestCode == GOOGLE_SIGNIN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -315,10 +331,12 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
                 OnCompleteListener<AuthResult> listener = new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        mProgressDialog.dismiss();
                         if (task.isSuccessful()) {
                             FirebaseUser user = task.getResult().getUser();
                             Toast.makeText(MainMenuActivity.this, "Signed in to " + user.getEmail(), Toast.LENGTH_SHORT).show();
                             updateUI(user);
+                            bookFragment.addLoanRange();
                         } else {
                             Log.d(TAG, "Fail: ", task.getException());
                             updateUI(null);
@@ -333,6 +351,7 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
             } else {
                 Log.d(TAG, "Unsuccessful Login: " + result.getStatus().getStatusMessage());
             }
+
         }
     }
 
@@ -410,7 +429,8 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
 
             switch (position) {
                 case 0:
-                    return new BooksTabFragment();
+                    bookFragment = new BooksTabFragment();
+                    return bookFragment;
                 case 1:
                     return new LocationsTabFragment();
                 case 2:

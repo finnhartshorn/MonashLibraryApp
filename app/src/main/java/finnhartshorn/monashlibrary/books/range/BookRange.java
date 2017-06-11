@@ -20,8 +20,9 @@ public abstract class BookRange implements ValueEventListener {
 
     private String mTitle;
     private Query mBookQuery;
-    private OnBookDataChanged mChangeListener;
-    private OnBookDataCancelled mCancelListener;
+    protected OnBookDataChanged mChangeListener;
+    protected OnBookDataCancelled mCancelListener;
+    protected ArrayList<Book> mBooklist;
 
 
     public interface OnBookDataChanged {
@@ -41,7 +42,7 @@ public abstract class BookRange implements ValueEventListener {
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        ArrayList<Book> mBooklist = new ArrayList<>();
+        mBooklist = new ArrayList<>();
         for (DataSnapshot bookSnapShot : dataSnapshot.getChildren()) {
             Book book = bookSnapShot.getValue(Book.class);
             book.setFirebaseId(bookSnapShot.getKey());
@@ -53,6 +54,11 @@ public abstract class BookRange implements ValueEventListener {
     @Override
     public void onCancelled(DatabaseError databaseError) {
         mCancelListener.onDataCancelled(databaseError);
+    }
+
+    public void refreshData() {
+        mBookQuery.removeEventListener(this);
+        mBookQuery.addValueEventListener(this);
     }
 
     public Query getBookQuery() {

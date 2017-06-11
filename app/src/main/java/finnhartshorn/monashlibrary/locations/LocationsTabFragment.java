@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import finnhartshorn.monashlibrary.model.Location;
+import finnhartshorn.monashlibrary.model.LibraryLocation;
 import finnhartshorn.monashlibrary.R;
 
 
 public class LocationsTabFragment extends Fragment {
 
-    private ArrayList<Location> mLocationList;
+    private ArrayList<LibraryLocation> mLibraryLocationList;
 
     public LocationsTabFragment() {
         // Required empty public constructor
@@ -37,7 +37,7 @@ public class LocationsTabFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.books_recycler_view);
         recyclerView.setHasFixedSize(true);
         initDataset();
-        LocationRecyclerViewAdapter locationAdapter = new LocationRecyclerViewAdapter(getContext(), mLocationList);
+        LocationRecyclerViewAdapter locationAdapter = new LocationRecyclerViewAdapter(getContext(), mLibraryLocationList);
         recyclerView.setAdapter(locationAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -47,9 +47,9 @@ public class LocationsTabFragment extends Fragment {
     }
 
     private void initDataset() {
-        mLocationList = new ArrayList<>();
-        mLocationList.add(new Location("Clayton", "13 College Walk Monash University", "Clayton", "VIC", "3168", "Australia", "https://www.monash.edu/__data/assets/image/0003/157764/banner-title-hal.jpg"));
-        mLocationList.add(new Location("Caulfield", "900 Dandenong Road", "Caulfield East", "VIC", "3145", "Australia", "https://www.monash.edu/__data/assets/image/0006/918249/caulfield-B.jpg"));
-        mLocationList.add(new Location("Peninsula", "Building L McMahons Road", "Frankston", "VIC", "3199", "Australia", "https://www.monash.edu/__data/assets/image/0003/918192/Peninsula-Library-B.jpg"));
+        mLibraryLocationList = new ArrayList<>();
+        mLibraryLocationList.add(new LibraryLocation("Clayton Library", "13 College Walk Monash University", "Clayton", "VIC", "3168", "Australia", "https://www.monash.edu/__data/assets/image/0003/157764/banner-title-hal.jpg"));
+        mLibraryLocationList.add(new LibraryLocation("Caulfield Library", "900 Dandenong Road", "Caulfield East", "VIC", "3145", "Australia", "https://www.monash.edu/__data/assets/image/0006/918249/caulfield-B.jpg"));
+        mLibraryLocationList.add(new LibraryLocation("Peninsula Library", "Building L McMahons Road", "Frankston", "VIC", "3199", "Australia", "https://www.monash.edu/__data/assets/image/0003/918192/Peninsula-Library-B.jpg"));
     }
 }

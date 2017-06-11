@@ -9,6 +9,6 @@ import com.google.firebase.database.Query;
 
 public class PopularRange extends BookRange {
     public PopularRange(OnBookDataChanged changeListener, OnBookDataCancelled cancelListener) {
-        super("Popular Books", FirebaseDatabase.getInstance().getReference().child("books").orderByChild("Title"), changeListener, cancelListener);
+        super("Popular Books", FirebaseDatabase.getInstance().getReference().child("books").orderByChild("title"), changeListener, cancelListener);
     }
 }

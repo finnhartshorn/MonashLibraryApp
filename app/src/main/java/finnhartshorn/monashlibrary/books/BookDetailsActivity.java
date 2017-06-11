@@ -67,7 +67,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         peninsulaTextView.setText(availability.getPeninsula().name());
 
 
-        StorageReference coverReference = thumbnailsReference.child(displayBook.getThumbnail());          //TODO: This could fail, handle that
+        StorageReference coverReference = thumbnailsReference.child(displayBook.getThumbnail());
 
         Glide.with(this)        // Glide caches images, which will reduce data footprint
                 .using(new FirebaseImageLoader())
