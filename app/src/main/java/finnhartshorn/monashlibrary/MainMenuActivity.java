@@ -150,7 +150,7 @@ public class MainMenuActivity extends AppCompatActivity implements GoogleApiClie
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        // Setup account drawer
+        // Setup account drawer: Uses the Material Drawer library by Mike Penz https://github.com/mikepenz/MaterialDrawer
         mAnonAccount = new ProfileDrawerItem().withName("Anonymous Account").withEmail("Anonymous Account").withIcon(R.drawable.ic_account_circle_24dp);
         mChangeAccount = new ProfileSettingDrawerItem().withName("Change Account").withIcon(R.drawable.ic_account_box_24dp).withIdentifier(CHANGE_PROFILE);
 

@@ -44,6 +44,8 @@ public class OuterBookAdapter extends GenericAdapter<BookRange> {
         TextView moreTextView = (TextView) viewHolder.getItemView().findViewById(R.id.view_more);
         moreTextView.setOnClickListener(bookRange);
 
+        // Uses Recyclerview-animators by Wasabeef for animating recycler views https://github.com/wasabeef/recyclerview-animators
+
         RecyclerView innerRecyclerView = (RecyclerView) viewHolder.getItemView().findViewById(R.id.outer_RecyclerView);
         innerRecyclerView.setItemAnimator(new SlideInRightAnimator());
         innerRecyclerView.getItemAnimator().setAddDuration(1000);
